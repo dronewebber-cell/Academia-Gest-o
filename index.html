@@ -387,7 +387,7 @@
             background: #1d4ed8;
         }
 
-        /* BOTÃO WHATSAPP */
+        /* BOTÃO WHATSAPP MAIS BONITO E MODERNO */
         .btn-whatsapp {
             background: #25D366;
             color: white;
@@ -412,21 +412,6 @@
             background: #20ba5a;
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(37, 211, 102, 0.4);
-        }
-
-        .btn-delete {
-            background: #fee2e2;
-            color: #dc2626;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background 0.2s;
-            margin-left: 5px;
-        }
-        .btn-delete:hover {
-            background: #fecaca;
         }
     </style>
 </head>
@@ -497,15 +482,15 @@
                     <div class="metric-card">
                         <div class="metric-icon paid"><i class="fa-solid fa-circle-check"></i></div>
                         <div class="metric-info">
-                            <span>Alunos em Dia</span>
-                            <h3 id="totalPago">0</h3>
+                            <span>Valores a Receber</span>
+                            <h3 id="totalPago">R$ 0,00</h3>
                         </div>
                     </div>
                     <div class="metric-card">
                         <div class="metric-icon debt"><i class="fa-solid fa-users-slash"></i></div>
                         <div class="metric-info">
-                            <span>Inadimplentes (Atrasados)</span>
-                            <h3 id="totalDevendo">0</h3>
+                            <span>Inadimplentes</span>
+                            <h3 id="totalDevendo">1</h3>
                         </div>
                     </div>
                 </div>
@@ -547,10 +532,8 @@
                                     <th>CPF</th>
                                     <th>WhatsApp</th>
                                     <th>Plano</th>
-                                    <th>Valor</th>
-                                    <th>Vencimento</th>
-                                    <th>Status</th>
-                                    <th>Ações</th>
+                                    <th>Financeiro</th>
+                                    <th>Cobrança</th>
                                 </tr>
                             </thead>
                             <tbody id="tabelaAlunosBody"></tbody>
@@ -590,12 +573,15 @@
                                 </select>
                             </div>
                             <div class="input-group">
-                                <label>Valor da Mensalidade (R$)</label>
-                                <input type="number" step="0.01" id="valorAluno" required placeholder="150.00">
+                                <label>Situação Financeira</label>
+                                <select id="statusAluno">
+                                    <option value="Pago">Pago</option>
+                                    <option value="Devedor">Devedor (Pendente)</option>
+                                </select>
                             </div>
                             <div class="input-group">
-                                <label>Data de Vencimento</label>
-                                <input type="date" id="vencimentoAluno" required>
+                                <label>Valor da Mensalidade (R$)</label>
+                                <input type="number" step="0.01" id="valorAluno" required placeholder="150.00">
                             </div>
                         </div>
                         <button type="submit" class="btn-primary"><i class="fa-solid fa-check"></i> Salvar Aluno</button>
@@ -607,51 +593,19 @@
     </div>
 
     <script>
-        let alunos = carregarAlunosSalvos();
+        let alunos = [
+            { nome: "Carlos Eduardo", cpf: "123.456.789-00", tel: "5511999998888", plano: "Completo", status: "Pago", valor: 150.00 },
+            { nome: "Mariana Souza", cpf: "987.654.321-11", tel: "5511988887777", plano: "Premium", status: "Devedor", valor: 200.00 }
+        ];
+
         let financeChartInstance = null;
         let statusChartInstance = null;
-
-        function carregarAlunosSalvos() {
-            const salvos = localStorage.getItem('fitness_alunos');
-            if (salvos) {
-                try {
-                    return JSON.parse(salvos);
-                } catch (e) {
-                    console.error("Erro ao carregar dados", e);
-                }
-            }
-            return [
-                { nome: "Carlos Eduardo", cpf: "123.456.789-00", tel: "5511999998888", plano: "Completo", valor: 150.00, vencimento: "2026-11-10" },
-                { nome: "Mariana Souza", cpf: "987.654.321-11", tel: "5511988887777", plano: "Premium", valor: 200.00, vencimento: "2026-10-15" }
-            ];
-        }
-
-        function salvarNoLocalStorage() {
-            localStorage.setItem('fitness_alunos', JSON.stringify(alunos));
-        }
-
-        function verificarStatusAluno(dataVencimentoStr) {
-            if (!dataVencimentoStr) return 'Em dia';
-            const hoje = new Date();
-            hoje.setHours(0, 0, 0, 0);
-            const vencimento = new Date(dataVencimentoStr + 'T00:00:00');
-            return vencimento < hoje ? 'Atrasado' : 'Em dia';
-        }
-
-        function formatarDataBR(dataIso) {
-            if (!dataIso) return "";
-            const partes = dataIso.split("-");
-            return `${partes[2]}/${partes[1]}/${partes[0]}`;
-        }
 
         // Login
         function realizarLogin(event) {
             event.preventDefault();
-            const inputUser = document.getElementById("username");
+            const usuario = document.getElementById("username").value.trim().toUpperCase();
             const errorMsg = document.getElementById("loginError");
-            
-            if (!inputUser) return;
-            const usuario = inputUser.value.trim().toUpperCase();
 
             if (usuario === "ADM") {
                 document.getElementById("loginScreen").classList.add("hidden");
@@ -674,120 +628,113 @@
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-section').forEach(section => section.classList.add('hidden'));
 
-            const tabEl = document.getElementById('tab-' + abaId);
-            const menuEl = document.getElementById('menu-' + abaId);
-
-            if (tabEl) tabEl.classList.remove('hidden');
-            if (menuEl) menuEl.classList.add('active');
-
             if (abaId === 'dashboard') {
+                document.getElementById('tab-dashboard').classList.remove('hidden');
+                document.getElementById('menu-dashboard').classList.add('active');
                 atualizarDashboard();
                 renderizarGraficos();
             } else if (abaId === 'alunos') {
+                document.getElementById('tab-alunos').classList.remove('hidden');
+                document.getElementById('menu-alunos').classList.add('active');
                 renderizarAlunos();
+            } else if (abaId === 'cadastro') {
+                document.getElementById('tab-cadastro').classList.remove('hidden');
+                document.getElementById('menu-cadastro').classList.add('active');
             }
         }
 
         // Atualizar Métricas do Dashboard
         function atualizarDashboard() {
             let totalMov = 0;
-            let countEmDia = 0;
-            let countAtrasados = 0;
+            let totalPagoVal = 0;
+            let countInadimplentes = 0;
 
             alunos.forEach(a => {
-                totalMov += Number(a.valor) || 0;
-                let status = verificarStatusAluno(a.vencimento);
-                if (status === 'Em dia') {
-                    countEmDia++;
+                totalMov += a.valor;
+                if (a.status === 'Pago') {
+                    totalPagoVal += a.valor;
                 } else {
-                    countAtrasados++;
+                    countInadimplentes++;
                 }
             });
 
             document.getElementById("totalMovimento").textContent = `R$ ${totalMov.toFixed(2)}`;
-            document.getElementById("totalPago").textContent = countEmDia;
-            document.getElementById("totalDevendo").textContent = countAtrasados;
+            document.getElementById("totalPago").textContent = `R$ ${totalPagoVal.toFixed(2)}`;
+            document.getElementById("totalDevendo").textContent = countInadimplentes;
         }
 
-        // Renderizar Gráficos com Chart.js
+        // Renderizar Gráficos com Chart.js (tamanho reduzido)
         function renderizarGraficos() {
-            let totalMovimento = 0;
-            let countEmDia = 0;
-            let countAtrasados = 0;
+            let totalPagoVal = 0;
+            let totalDevendoVal = 0;
+            let countPago = 0;
+            let countDevendo = 0;
 
             alunos.forEach(a => {
-                totalMovimento += Number(a.valor) || 0;
-                let status = verificarStatusAluno(a.vencimento);
-                if (status === 'Em dia') {
-                    countEmDia++;
+                if (a.status === 'Pago') {
+                    totalPagoVal += a.valor;
+                    countPago++;
                 } else {
-                    countAtrasados++;
+                    totalDevendoVal += a.valor;
+                    countDevendo++;
                 }
             });
 
             // Gráfico de Barras Financeiro
-            const canvasFinance = document.getElementById('financeChart');
-            if (canvasFinance) {
-                const ctxFinance = canvasFinance.getContext('2d');
-                if (financeChartInstance) financeChartInstance.destroy();
-                
-                financeChartInstance = new Chart(ctxFinance, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Movimento Total'],
-                        datasets: [{
-                            label: 'Valor (R$)',
-                            data: [totalMovimento],
-                            backgroundColor: ['#2563eb'],
-                            borderRadius: 6
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } }
-                    }
-                });
-            }
+            const ctxFinance = document.getElementById('financeChart').getContext('2d');
+            if (financeChartInstance) financeChartInstance.destroy();
+            
+            financeChartInstance = new Chart(ctxFinance, {
+                type: 'bar',
+                data: {
+                    labels: ['Recebido', 'Pendente'],
+                    datasets: [{
+                        label: 'Valores (R$)',
+                        data: [totalPagoVal, totalDevendoVal],
+                        backgroundColor: ['#16a34a', '#dc2626'],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } }
+                }
+            });
 
             // Gráfico de Pizza de Alunos
-            const canvasStatus = document.getElementById('statusChart');
-            if (canvasStatus) {
-                const ctxStatus = canvasStatus.getContext('2d');
-                if (statusChartInstance) statusChartInstance.destroy();
+            const ctxStatus = document.getElementById('statusChart').getContext('2d');
+            if (statusChartInstance) statusChartInstance.destroy();
 
-                statusChartInstance = new Chart(ctxStatus, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Em Dia', 'Atrasados'],
-                        datasets: [{
-                            data: [countEmDia, countAtrasados],
-                            backgroundColor: ['#16a34a', '#dc2626']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } }
-                    }
-                });
-            }
+            statusChartInstance = new Chart(ctxStatus, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Em Dia', 'Inadimplentes'],
+                    datasets: [{
+                        data: [countPago, countDevendo],
+                        backgroundColor: ['#16a34a', '#dc2626']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } }
+                }
+            });
         }
 
         // Tabela de Alunos
         function renderizarAlunos(lista = alunos) {
             const tbody = document.getElementById("tabelaAlunosBody");
-            if (!tbody) return;
             tbody.innerHTML = "";
 
             if (lista.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #64748b;">Nenhum aluno encontrado.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #64748b;">Nenhum aluno encontrado.</td></tr>`;
                 return;
             }
 
-            lista.forEach((aluno, index) => {
-                let status = verificarStatusAluno(aluno.vencimento);
-                let statusClass = status === 'Em dia' ? 'pago' : 'devedor';
+            lista.forEach((aluno) => {
+                let statusClass = aluno.status === 'Pago' ? 'pago' : 'devedor';
                 
                 let tr = document.createElement("tr");
                 tr.innerHTML = `
@@ -795,15 +742,10 @@
                     <td>${aluno.cpf}</td>
                     <td>${aluno.tel}</td>
                     <td>${aluno.plano}</td>
-                    <td>R$ ${(Number(aluno.valor) || 0).toFixed(2)}</td>
-                    <td>${formatarDataBR(aluno.vencimento)}</td>
-                    <td><span class="badge-status ${statusClass}">${status}</span></td>
+                    <td><span class="badge-status ${statusClass}">${aluno.status} (R$ ${aluno.valor.toFixed(2)})</span></td>
                     <td>
                         <button class="btn-whatsapp" onclick="enviarWhatsApp('${aluno.nome}', '${aluno.tel}')">
                             <i class="fa-brands fa-whatsapp"></i> Cobrar
-                        </button>
-                        <button class="btn-delete" onclick="excluirAluno(${index})" title="Excluir">
-                            <i class="fa-solid fa-trash"></i>
                         </button>
                     </td>
                 `;
@@ -819,11 +761,10 @@
             const cpf = document.getElementById("cpfAluno").value;
             const tel = document.getElementById("telAluno").value;
             const plano = document.getElementById("planoAluno").value;
+            const status = document.getElementById("statusAluno").value;
             const valor = parseFloat(document.getElementById("valorAluno").value);
-            const vencimento = document.getElementById("vencimentoAluno").value;
 
-            alunos.push({ nome, cpf, tel, plano, valor, vencimento });
-            salvarNoLocalStorage();
+            alunos.push({ nome, cpf, tel, plano, status, valor });
 
             alert("Aluno cadastrado com sucesso!");
             document.getElementById("alunoForm").reset();
@@ -831,23 +772,11 @@
             mudarAba('alunos');
         }
 
-        // Excluir Aluno
-        function excluirAluno(index) {
-            if (confirm("Deseja realmente excluir este aluno?")) {
-                alunos.splice(index, 1);
-                salvarNoLocalStorage();
-                renderizarAlunos();
-            }
-        }
-
         // Filtro de Alunos
         function filtrarAlunos() {
-            const inputSearch = document.getElementById("searchAluno");
-            if (!inputSearch) return;
-            const termo = inputSearch.value.toLowerCase();
+            const termo = document.getElementById("searchAluno").value.toLowerCase();
             const filtrados = alunos.filter(a => 
-                (a.nome && a.nome.toLowerCase().includes(termo)) || 
-                (a.cpf && a.cpf.toLowerCase().includes(termo))
+                a.nome.toLowerCase().includes(termo) || a.cpf.toLowerCase().includes(termo)
             );
             renderizarAlunos(filtrados);
         }
@@ -855,7 +784,7 @@
         // Envio de WhatsApp
         function enviarWhatsApp(nome, telefone) {
             let numeroLimpo = telefone.replace(/\D/g, '');
-            let mensagem = encodeURIComponent(`Olá ${nome}, tudo bem? Passando para lembrar sobre a sua mensalidade na Fitness Culture. Poderia verificar, por favor?`);
+            let mensagem = encodeURIComponent(`Olá ${nome}, tudo bem? Passando para lembrar sobre a sua mensalidade pendente na Fitness Culture. Poderia verificar, por favor?`);
             
             let url = `https://wa.me/${numeroLimpo}?text=${mensagem}`;
             window.open(url, '_blank');
