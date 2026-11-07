@@ -1,794 +1,1154 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fitness Culture - Gestão</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gestão Fitness Culture</title>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
-
-        body {
-            background-color: #f4f7fc;
-            color: #1e293b;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        /* TELA DE LOGIN */
-        .login-container {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-        }
-
-        .login-box {
-            background: #ffffff;
-            padding: 40px;
-            border-radius: 16px;
-            width: 100%;
-            max-width: 380px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        .login-logo i {
-            font-size: 3rem;
-            color: #2563eb;
-            margin-bottom: 12px;
-        }
-
-        .login-logo h1 {
-            font-size: 1.4rem;
-            color: #0f172a;
-            font-weight: 700;
-        }
-
-        .login-logo p {
-            font-size: 0.85rem;
-            color: #64748b;
-            margin-bottom: 30px;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 0.85rem;
-            color: #475569;
-            margin-bottom: 6px;
-            font-weight: 500;
-        }
-
-        .input-group input, .input-group select {
-            width: 100%;
-            padding: 12px 16px;
-            background: #f8fafc;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            color: #1e293b;
-            font-size: 0.95rem;
-            outline: none;
-            transition: all 0.2s;
-        }
-
-        .input-group input:focus, .input-group select:focus {
-            border-color: #2563eb;
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 12px 0;
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-login:hover {
-            background: #1d4ed8;
-        }
-
-        .error-msg {
-            color: #dc2626;
-            font-size: 0.85rem;
-            margin-top: 15px;
-        }
-
-        /* NAVBAR NO TOPO */
-        .top-navbar {
-            height: 70px;
-            background: #ffffff;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 40px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: #0f172a;
-        }
-
-        .nav-brand i {
-            color: #2563eb;
-            font-size: 1.4rem;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 10px;
-        }
-
-        .nav-btn {
-            background: transparent;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #64748b;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
-        }
-
-        .nav-btn:hover {
-            background: #f1f5f9;
-            color: #0f172a;
-        }
-
-        .nav-btn.active {
-            background: #eff6ff;
-            color: #2563eb;
-        }
-
-        .nav-user {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .user-badge {
-            background: #f1f5f9;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            color: #2563eb;
-            font-weight: 600;
-            border: 1px solid #e2e8f0;
-        }
-
-        .logout-btn {
-            background: #f1f5f9;
-            border: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            color: #dc2626;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-        }
-        .logout-btn:hover {
-            background: #fee2e2;
-        }
-
-        /* CONTEÚDO PRINCIPAL */
-        .main-content {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        .page-header {
-            margin-bottom: 25px;
-        }
-
-        .page-header h2 {
-            font-size: 1.5rem;
-            color: #0f172a;
-            font-weight: 700;
-        }
-
-        .page-header p {
-            color: #64748b;
-            font-size: 0.9rem;
-        }
-
-        /* MÉTRICAS */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .metric-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            padding: 24px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-        }
-
-        .metric-icon {
-            width: 54px;
-            height: 54px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-        }
-
-        .metric-icon.money { background: #eff6ff; color: #2563eb; }
-        .metric-icon.paid { background: #f0fdf4; color: #16a34a; }
-        .metric-icon.debt { background: #fef2f2; color: #dc2626; }
-
-        .metric-info span {
-            font-size: 0.85rem;
-            color: #64748b;
-            font-weight: 500;
-        }
-
-        .metric-info h3 {
-            font-size: 1.6rem;
-            color: #0f172a;
-            font-weight: 700;
-            margin-top: 4px;
-        }
-
-        /* GRÁFICOS COMPACTOS */
-        .charts-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-        }
-
-        .card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-        }
-
-        .card h3 {
-            font-size: 1.05rem;
-            color: #0f172a;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .canvas-container {
-            position: relative;
-            width: 100%;
-        }
-
-        .small-chart {
-            height: 180px;
-        }
-
-        /* TABELA */
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .card-header input {
-            background: #f8fafc;
-            border: 1px solid #cbd5e1;
-            padding: 10px 16px;
-            border-radius: 8px;
-            color: #1e293b;
-            outline: none;
-            width: 280px;
-            font-size: 0.9rem;
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-
-        .data-table th, .data-table td {
-            padding: 14px 16px;
-            border-bottom: 1px solid #e2e8f0;
-            font-size: 0.9rem;
-        }
-
-        .data-table th {
-            color: #64748b;
-            font-weight: 600;
-            background: #f8fafc;
-        }
-
-        .badge-status {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .badge-status.pago { background: #f0fdf4; color: #16a34a; }
-        .badge-status.devedor { background: #fef2f2; color: #dc2626; }
-
-        /* FORMULÁRIO */
-        .form-card {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .form-grid .input-group:nth-child(1) {
-            grid-column: span 2;
-        }
-
-        .btn-primary {
-            background: #2563eb;
-            color: #fff;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: background 0.2s;
-        }
-        .btn-primary:hover {
-            background: #1d4ed8;
-        }
-
-        /* BOTÃO WHATSAPP MAIS BONITO E MODERNO */
-        .btn-whatsapp {
-            background: #25D366;
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 0.82rem;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            font-weight: 600;
-            box-shadow: 0 2px 5px rgba(37, 211, 102, 0.3);
-            transition: all 0.2s ease;
-        }
-
-        .btn-whatsapp i {
-            font-size: 1rem;
-        }
-
-        .btn-whatsapp:hover {
-            background: #20ba5a;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(37, 211, 102, 0.4);
-        }
-    </style>
+<style>
+:root {
+  --bg: #f4f6fa;
+  --card: #fff;
+  --text: #182230;
+  --muted: #667085;
+  --line: #e4e7ec;
+  --gold: #e0b84c;
+  --green: #027a48;
+  --red: #b42318;
+  --orange: #b54708;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.5 Arial, sans-serif;
+}
+main {
+  max-width: 1100px;
+  margin: auto;
+  padding: 24px 16px 60px;
+}
+h1, h2, h3 { margin: 0 0 16px; }
+h1 { font-size: 30px; }
+h2 { font-size: 23px; }
+p { margin: 10px 0; }
+button, .button {
+  display: inline-block;
+  border: 0;
+  border-radius: 8px;
+  padding: 11px 16px;
+  background: var(--text);
+  color: white;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+button:hover, .button:hover { opacity: .88; }
+button:disabled { opacity: .5; cursor: default; }
+button.secondary {
+  background: #edf0f5;
+  color: var(--text);
+}
+button.danger { background: #fee4e2; color: var(--red); }
+button.gold { background: var(--gold); color: #111; }
+input, select, textarea {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid #cdd3dd;
+  border-radius: 8px;
+  background: white;
+  color: var(--text);
+  font: inherit;
+}
+input:focus, select:focus, textarea:focus, button:focus-visible {
+  outline: 3px solid #e0b84c88;
+  outline-offset: 2px;
+}
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.top, .actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.actions { justify-content: flex-start; }
+.top { margin-bottom: 20px; }
+.muted { color: var(--muted); font-size: 14px; }
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+nav button { background: #e7ebf1; color: var(--text); }
+nav button.active { background: var(--text); color: white; }
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.kpi {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: white;
+}
+.kpi strong { display: block; font-size: 29px; }
+.kpi span { color: var(--muted); font-size: 14px; }
+.green { color: var(--green); }
+.red { color: var(--red); }
+.form {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.wide { grid-column: span 2; }
+.full { grid-column: 1 / -1; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.filters > * { flex: 1; min-width: 180px; }
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 16px;
+  margin-bottom: 10px;
+  background: white;
+  border: 1px solid var(--line);
+  border-left: 5px solid #98a2b3;
+  border-radius: 10px;
+}
+.row.paid { border-left-color: var(--green); }
+.row.late { border-left-color: var(--red); }
+.row.wait { border-left-color: var(--orange); }
+.row.off { opacity: .7; }
+.name { font-size: 19px; font-weight: bold; }
+.tag {
+  display: inline-block;
+  padding: 3px 9px;
+  margin: 5px 6px 5px 0;
+  border-radius: 20px;
+  background: #edf0f5;
+  font-size: 12px;
+  font-weight: bold;
+}
+.paid .tag { background: #d1fadf; color: var(--green); }
+.late .tag { background: #fee4e2; color: var(--red); }
+.wait .tag { background: #fef0c7; color: var(--orange); }
+.empty {
+  padding: 28px;
+  text-align: center;
+  color: var(--muted);
+  border: 1px dashed #cdd3dd;
+  border-radius: 10px;
+}
+#login {
+  max-width: 410px;
+  margin: 12vh auto;
+  padding: 28px;
+  background: #182230;
+  border-radius: 14px;
+  color: white;
+}
+#login h1 {
+  border-left: 5px solid var(--gold);
+  padding-left: 14px;
+}
+#login label { color: #d0d5dd; }
+#login button { width: 100%; margin-top: 18px; }
+#error { color: #fda29b; min-height: 24px; }
+#notice {
+  background: #fff5d6;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 18px;
+  font-size: 14px;
+}
+.chart-row {
+  display: grid;
+  grid-template-columns: 65px 1fr 110px;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+  font-size: 14px;
+}
+.track { background: #edf0f5; border-radius: 5px; overflow: hidden; }
+.bar { height: 18px; background: var(--gold); min-width: 0; }
+@media (max-width: 720px) {
+  .kpis, .form { grid-template-columns: repeat(2, 1fr); }
+  .wide { grid-column: 1 / -1; }
+  .row { align-items: flex-start; }
+  .row .actions { width: 100%; }
+}
+@media (max-width: 400px) {
+  .form, .kpis { grid-template-columns: 1fr; }
+  .wide, .full { grid-column: 1; }
+  .chart-row { grid-template-columns: 48px 1fr 94px; font-size: 12px; }
+}
+</style>
 </head>
+
 <body>
+<main>
 
-    <!-- TELA DE LOGIN -->
-    <div id="loginScreen" class="login-container">
-        <div class="login-box">
-            <div class="login-logo">
-                <i class="fa-solid fa-dumbbell"></i>
-                <h1>Fitness Culture</h1>
-                <p>Painel Administrativo</p>
-            </div>
-            <form id="loginForm" onsubmit="realizarLogin(event)">
-                <div class="input-group">
-                    <input type="text" id="username" placeholder="Digite ADM para entrar" required autocomplete="off">
-                </div>
-                <button type="submit" class="btn-login">Acessar Painel</button>
-                <p id="loginError" class="error-msg"></p>
-            </form>
+<section id="login">
+  <h1>Gestão<br>Fitness Culture</h1>
+  <p>Entre com seu usuário. Não é necessária senha.</p>
+
+  <form id="loginForm">
+    <label for="username">Usuário</label>
+    <input
+      id="username"
+      value="Claudio Cantele"
+      autocomplete="username"
+      required
+    >
+    <p id="error" role="alert"></p>
+    <button class="gold" type="submit">Entrar</button>
+  </form>
+</section>
+
+<section id="app" hidden>
+  <header class="top">
+    <div>
+      <h1>Gestão Fitness Culture</h1>
+      <div class="muted">Administrador: Claudio Cantele</div>
+    </div>
+    <button id="logout" class="secondary">Sair</button>
+  </header>
+
+  <div id="notice">
+    Versão local: os dados ficam neste navegador.
+    O acesso usa apenas o nome, sem proteção por senha.
+  </div>
+
+  <nav aria-label="Menu principal">
+    <button data-tab="dashboard" class="active">Painel</button>
+    <button data-tab="students">Alunos</button>
+    <button data-tab="payments">Pagamentos</button>
+    <button data-tab="overdue">Inadimplentes</button>
+  </nav>
+
+  <section id="dashboard">
+    <div id="kpis" class="kpis"></div>
+
+    <div class="card">
+      <h2>Recebimentos nos últimos 6 meses</h2>
+      <p class="muted">
+        Valores agrupados pela data em que o pagamento foi recebido.
+      </p>
+      <div id="chart"></div>
+    </div>
+
+    <div class="card">
+      <h2>Vencimentos nos próximos 7 dias</h2>
+      <div id="upcoming"></div>
+    </div>
+  </section>
+
+  <section id="students" hidden>
+    <div class="card">
+      <h2 id="studentTitle">Cadastrar aluno</h2>
+
+      <form id="studentForm" class="form">
+        <div class="wide">
+          <label for="studentName">Nome completo</label>
+          <input id="studentName" required maxlength="120">
         </div>
+
+        <div class="wide">
+          <label for="studentPhone">WhatsApp com DDD</label>
+          <input id="studentPhone" type="tel" maxlength="25">
+        </div>
+
+        <div>
+          <label for="studentPlan">Plano</label>
+          <select id="studentPlan">
+            <option value="Básico">Básico</option>
+            <option value="Completo">Completo</option>
+            <option value="Premium">Premium</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="studentValue">Mensalidade (R$)</label>
+          <input
+            id="studentValue"
+            type="number"
+            min="0.01"
+            step="0.01"
+            value="110"
+            required
+          >
+        </div>
+
+        <div>
+          <label for="studentDay">Dia do vencimento</label>
+          <input
+            id="studentDay"
+            type="number"
+            min="1"
+            max="31"
+            value="10"
+            required
+          >
+        </div>
+
+        <div>
+          <label for="studentStart">Primeiro mês cobrado</label>
+          <input id="studentStart" type="month" required>
+        </div>
+
+        <div class="full">
+          <label for="studentNotes">Observações</label>
+          <textarea id="studentNotes" rows="2" maxlength="1000"></textarea>
+        </div>
+
+        <div class="full actions">
+          <button id="saveStudent" type="submit">Cadastrar aluno</button>
+          <button id="cancelEdit" type="button" class="secondary" hidden>
+            Cancelar edição
+          </button>
+        </div>
+      </form>
     </div>
 
-    <!-- PAINEL INTERNO -->
-    <div id="appScreen" class="app-container hidden">
-        
-        <!-- NAVBAR NO TOPO -->
-        <header class="top-navbar">
-            <div class="nav-brand">
-                <i class="fa-solid fa-dumbbell"></i>
-                <span>Fitness Culture</span>
-            </div>
-            <nav class="nav-menu">
-                <button id="menu-dashboard" class="nav-btn active" onclick="mudarAba('dashboard')">
-                    <i class="fa-solid fa-chart-pie"></i> Visão Geral
-                </button>
-                <button id="menu-alunos" class="nav-btn" onclick="mudarAba('alunos')">
-                    <i class="fa-solid fa-users"></i> Alunos & Cobranças
-                </button>
-                <button id="menu-cadastro" class="nav-btn" onclick="mudarAba('cadastro')">
-                    <i class="fa-solid fa-user-plus"></i> Novo Aluno
-                </button>
-            </nav>
-            <div class="nav-user">
-                <span class="user-badge"><i class="fa-solid fa-user-shield"></i> ADM</span>
-                <button onclick="fazerLogout()" class="logout-btn" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></button>
-            </div>
-        </header>
-
-        <!-- CONTEÚDO PRINCIPAL -->
-        <main class="main-content">
-            
-            <!-- ABA 1: VISÃO GERAL -->
-            <section id="tab-dashboard" class="tab-section">
-                <div class="page-header">
-                    <h2>Visão Geral do Sistema</h2>
-                    <p>Acompanhe o fluxo financeiro e o status dos alunos em tempo real.</p>
-                </div>
-
-                <div class="metrics-grid">
-                    <div class="metric-card">
-                        <div class="metric-icon money"><i class="fa-solid fa-wallet"></i></div>
-                        <div class="metric-info">
-                            <span>Movimento Total no Mês</span>
-                            <h3 id="totalMovimento">R$ 0,00</h3>
-                        </div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-icon paid"><i class="fa-solid fa-circle-check"></i></div>
-                        <div class="metric-info">
-                            <span>Valores a Receber</span>
-                            <h3 id="totalPago">R$ 0,00</h3>
-                        </div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-icon debt"><i class="fa-solid fa-users-slash"></i></div>
-                        <div class="metric-info">
-                            <span>Inadimplentes</span>
-                            <h3 id="totalDevendo">1</h3>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SEÇÃO DE GRÁFICOS (COMPACTOS) -->
-                <div class="charts-grid">
-                    <div class="card chart-card">
-                        <h3><i class="fa-solid fa-chart-bar"></i> Desempenho Financeiro</h3>
-                        <div class="canvas-container small-chart">
-                            <canvas id="financeChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <h3><i class="fa-solid fa-chart-pie"></i> Proporção de Alunos</h3>
-                        <div class="canvas-container small-chart">
-                            <canvas id="statusChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ABA 2: ALUNOS & COBRANÇAS -->
-            <section id="tab-alunos" class="tab-section hidden">
-                <div class="page-header">
-                    <h2>Alunos e Cobranças</h2>
-                    <p>Gerencie cadastros, verifique pendências e envie cobranças via WhatsApp.</p>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fa-solid fa-address-book"></i> Lista de Alunos</h3>
-                        <input type="text" id="searchAluno" placeholder="Pesquisar por nome ou CPF..." onkeyup="filtrarAlunos()">
-                    </div>
-                    <div class="table-responsive">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>CPF</th>
-                                    <th>WhatsApp</th>
-                                    <th>Plano</th>
-                                    <th>Financeiro</th>
-                                    <th>Cobrança</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabelaAlunosBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ABA 3: CADASTRAR ALUNOS -->
-            <section id="tab-cadastro" class="tab-section hidden">
-                <div class="page-header">
-                    <h2>Cadastrar Novo Aluno</h2>
-                    <p>Preencha as informações para registrar um novo membro na academia.</p>
-                </div>
-
-                <div class="card form-card">
-                    <form id="alunoForm" onsubmit="cadastrarAluno(event)">
-                        <div class="form-grid">
-                            <div class="input-group">
-                                <label>Nome Completo</label>
-                                <input type="text" id="nomeAluno" required placeholder="Ex: João da Silva">
-                            </div>
-                            <div class="input-group">
-                                <label>CPF</label>
-                                <input type="text" id="cpfAluno" required placeholder="000.000.000-00">
-                            </div>
-                            <div class="input-group">
-                                <label>WhatsApp</label>
-                                <input type="text" id="telAluno" required placeholder="5511999999999">
-                            </div>
-                            <div class="input-group">
-                                <label>Plano</label>
-                                <select id="planoAluno">
-                                    <option value="Básico">Básico</option>
-                                    <option value="Completo">Completo</option>
-                                    <option value="Premium">Premium</option>
-                                </select>
-                            </div>
-                            <div class="input-group">
-                                <label>Situação Financeira</label>
-                                <select id="statusAluno">
-                                    <option value="Pago">Pago</option>
-                                    <option value="Devedor">Devedor (Pendente)</option>
-                                </select>
-                            </div>
-                            <div class="input-group">
-                                <label>Valor da Mensalidade (R$)</label>
-                                <input type="number" step="0.01" id="valorAluno" required placeholder="150.00">
-                            </div>
-                        </div>
-                        <button type="submit" class="btn-primary"><i class="fa-solid fa-check"></i> Salvar Aluno</button>
-                    </form>
-                </div>
-            </section>
-
-        </main>
+    <div class="filters">
+      <input id="search" placeholder="Buscar aluno pelo nome" aria-label="Buscar aluno">
+      <select id="statusFilter" aria-label="Filtrar situação">
+        <option value="all">Todos os alunos</option>
+        <option value="paid">Em dia</option>
+        <option value="wait">A vencer</option>
+        <option value="late">Inadimplentes</option>
+        <option value="off">Inativos</option>
+      </select>
     </div>
 
-    <script>
-        let alunos = [
-            { nome: "Carlos Eduardo", cpf: "123.456.789-00", tel: "5511999998888", plano: "Completo", status: "Pago", valor: 150.00 },
-            { nome: "Mariana Souza", cpf: "987.654.321-11", tel: "5511988887777", plano: "Premium", status: "Devedor", valor: 200.00 }
-        ];
+    <div id="studentList"></div>
+  </section>
 
-        let financeChartInstance = null;
-        let statusChartInstance = null;
+  <section id="payments" hidden>
+    <div class="card">
+      <h2>Registrar pagamento</h2>
 
-        // Login
-        function realizarLogin(event) {
-            event.preventDefault();
-            const usuario = document.getElementById("username").value.trim().toUpperCase();
-            const errorMsg = document.getElementById("loginError");
+      <form id="paymentForm" class="form">
+        <div class="wide">
+          <label for="paymentStudent">Aluno</label>
+          <select id="paymentStudent" required></select>
+        </div>
 
-            if (usuario === "ADM") {
-                document.getElementById("loginScreen").classList.add("hidden");
-                document.getElementById("appScreen").classList.remove("hidden");
-                mudarAba('dashboard');
-            } else {
-                errorMsg.textContent = "Digite exatamente: ADM";
-            }
-        }
+        <div>
+          <label for="paymentMonth">Mês de referência</label>
+          <input id="paymentMonth" type="month" required>
+        </div>
 
-        function fazerLogout() {
-            document.getElementById("appScreen").classList.add("hidden");
-            document.getElementById("loginScreen").classList.remove("hidden");
-            document.getElementById("username").value = "";
-            document.getElementById("loginError").textContent = "";
-        }
+        <div>
+          <label for="paymentValue">Valor recebido (R$)</label>
+          <input
+            id="paymentValue"
+            type="number"
+            min="0.01"
+            step="0.01"
+            required
+          >
+        </div>
 
-        // Navegação entre Abas
-        function mudarAba(abaId) {
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-section').forEach(section => section.classList.add('hidden'));
+        <div class="wide">
+          <label for="paymentDate">Data do pagamento</label>
+          <input id="paymentDate" type="date" required>
+        </div>
 
-            if (abaId === 'dashboard') {
-                document.getElementById('tab-dashboard').classList.remove('hidden');
-                document.getElementById('menu-dashboard').classList.add('active');
-                atualizarDashboard();
-                renderizarGraficos();
-            } else if (abaId === 'alunos') {
-                document.getElementById('tab-alunos').classList.remove('hidden');
-                document.getElementById('menu-alunos').classList.add('active');
-                renderizarAlunos();
-            } else if (abaId === 'cadastro') {
-                document.getElementById('tab-cadastro').classList.remove('hidden');
-                document.getElementById('menu-cadastro').classList.add('active');
-            }
-        }
+        <div class="wide">
+          <label for="paymentMethod">Forma de pagamento</label>
+          <select id="paymentMethod">
+            <option>Pix</option>
+            <option>Dinheiro</option>
+            <option>Cartão de débito</option>
+            <option>Cartão de crédito</option>
+            <option>Transferência</option>
+          </select>
+        </div>
 
-        // Atualizar Métricas do Dashboard
-        function atualizarDashboard() {
-            let totalMov = 0;
-            let totalPagoVal = 0;
-            let countInadimplentes = 0;
+        <div class="full">
+          <button type="submit">Confirmar pagamento</button>
+        </div>
+      </form>
+    </div>
 
-            alunos.forEach(a => {
-                totalMov += a.valor;
-                if (a.status === 'Pago') {
-                    totalPagoVal += a.valor;
-                } else {
-                    countInadimplentes++;
-                }
-            });
+    <h2>Histórico de pagamentos</h2>
+    <div id="paymentList"></div>
+  </section>
 
-            document.getElementById("totalMovimento").textContent = `R$ ${totalMov.toFixed(2)}`;
-            document.getElementById("totalPago").textContent = `R$ ${totalPagoVal.toFixed(2)}`;
-            document.getElementById("totalDevendo").textContent = countInadimplentes;
-        }
+  <section id="overdue" hidden>
+    <div class="top">
+      <h2>Alunos inadimplentes</h2>
+      <button id="exportCsv" class="secondary">Exportar CSV</button>
+    </div>
+    <div id="overdueList"></div>
+  </section>
+</section>
 
-        // Renderizar Gráficos com Chart.js (tamanho reduzido)
-        function renderizarGraficos() {
-            let totalPagoVal = 0;
-            let totalDevendoVal = 0;
-            let countPago = 0;
-            let countDevendo = 0;
+</main>
 
-            alunos.forEach(a => {
-                if (a.status === 'Pago') {
-                    totalPagoVal += a.valor;
-                    countPago++;
-                } else {
-                    totalDevendoVal += a.valor;
-                    countDevendo++;
-                }
-            });
+<script>
+"use strict";
 
-            // Gráfico de Barras Financeiro
-            const ctxFinance = document.getElementById('financeChart').getContext('2d');
-            if (financeChartInstance) financeChartInstance.destroy();
-            
-            financeChartInstance = new Chart(ctxFinance, {
-                type: 'bar',
-                data: {
-                    labels: ['Recebido', 'Pendente'],
-                    datasets: [{
-                        label: 'Valores (R$)',
-                        data: [totalPagoVal, totalDevendoVal],
-                        backgroundColor: ['#16a34a', '#dc2626'],
-                        borderRadius: 6
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } }
-                }
-            });
+const USER = "Claudio Cantele";
 
-            // Gráfico de Pizza de Alunos
-            const ctxStatus = document.getElementById('statusChart').getContext('2d');
-            if (statusChartInstance) statusChartInstance.destroy();
+/* Mantém a chave usada na versão anterior para preservar os alunos. */
+const STORAGE_KEY = "fitness-culture-demo-v1";
 
-            statusChartInstance = new Chart(ctxStatus, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Em Dia', 'Inadimplentes'],
-                    datasets: [{
-                        data: [countPago, countDevendo],
-                        backgroundColor: ['#16a34a', '#dc2626']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } }
-                }
-            });
-        }
+const $ = id => document.getElementById(id);
+const prices = { "Básico": 110, "Completo": 150, "Premium": 200 };
 
-        // Tabela de Alunos
-        function renderizarAlunos(lista = alunos) {
-            const tbody = document.getElementById("tabelaAlunosBody");
-            tbody.innerHTML = "";
+let students = [];
+let editingId = null;
+let loggedIn = false;
 
-            if (lista.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #64748b;">Nenhum aluno encontrado.</td></tr>`;
-                return;
-            }
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, character => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[character]);
+}
 
-            lista.forEach((aluno) => {
-                let statusClass = aluno.status === 'Pago' ? 'pago' : 'devedor';
-                
-                let tr = document.createElement("tr");
-                tr.innerHTML = `
-                    <td><strong>${aluno.nome}</strong></td>
-                    <td>${aluno.cpf}</td>
-                    <td>${aluno.tel}</td>
-                    <td>${aluno.plano}</td>
-                    <td><span class="badge-status ${statusClass}">${aluno.status} (R$ ${aluno.valor.toFixed(2)})</span></td>
-                    <td>
-                        <button class="btn-whatsapp" onclick="enviarWhatsApp('${aluno.nome}', '${aluno.tel}')">
-                            <i class="fa-brands fa-whatsapp"></i> Cobrar
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
+function money(value) {
+  return Number(value || 0).toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL"
+  });
+}
 
-        // Cadastro de Alunos
-        function cadastrarAluno(event) {
-            event.preventDefault();
+function today() {
+  const date = new Date();
+  date.setHours(0, 0, 0, 0);
+  return date;
+}
 
-            const nome = document.getElementById("nomeAluno").value;
-            const cpf = document.getElementById("cpfAluno").value;
-            const tel = document.getElementById("telAluno").value;
-            const plano = document.getElementById("planoAluno").value;
-            const status = document.getElementById("statusAluno").value;
-            const valor = parseFloat(document.getElementById("valorAluno").value);
+function dateKey(date) {
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getDate()).padStart(2, "0")
+  ].join("-");
+}
 
-            alunos.push({ nome, cpf, tel, plano, status, valor });
+function monthKey(date) {
+  return dateKey(date).slice(0, 7);
+}
 
-            alert("Aluno cadastrado com sucesso!");
-            document.getElementById("alunoForm").reset();
-            
-            mudarAba('alunos');
-        }
+function monthLabel(value) {
+  const [year, month] = value.split("-").map(Number);
+  return new Date(year, month - 1, 1).toLocaleDateString("pt-BR", {
+    month: "long",
+    year: "numeric"
+  });
+}
 
-        // Filtro de Alunos
-        function filtrarAlunos() {
-            const termo = document.getElementById("searchAluno").value.toLowerCase();
-            const filtrados = alunos.filter(a => 
-                a.nome.toLowerCase().includes(termo) || a.cpf.toLowerCase().includes(termo)
-            );
-            renderizarAlunos(filtrados);
-        }
+function formatDate(value) {
+  return value ? value.split("-").reverse().join("/") : "";
+}
 
-        // Envio de WhatsApp
-        function enviarWhatsApp(nome, telefone) {
-            let numeroLimpo = telefone.replace(/\D/g, '');
-            let mensagem = encodeURIComponent(`Olá ${nome}, tudo bem? Passando para lembrar sobre a sua mensalidade pendente na Fitness Culture. Poderia verificar, por favor?`);
-            
-            let url = `https://wa.me/${numeroLimpo}?text=${mensagem}`;
-            window.open(url, '_blank');
-        }
-    </script>
+function validMonth(value) {
+  return /^\d{4}-(0[1-9]|1[0-2])$/.test(value || "");
+}
+
+function dueDate(year, month, day) {
+  const lastDay = new Date(year, month + 1, 0).getDate();
+  return new Date(year, month, Math.min(Number(day), lastDay));
+}
+
+function loadStudents() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
+    if (!Array.isArray(saved)) {
+      throw new Error("Formato de dados inválido.");
+    }
+
+    students = saved;
+    return true;
+  } catch (error) {
+    alert(
+      "Não foi possível ler os dados salvos. " +
+      "Verifique se o navegador permite armazenamento local."
+    );
+    return false;
+  }
+}
+
+/* Só atualiza a tela depois que o armazenamento confirma a gravação. */
+function saveStudents(next) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    students = next;
+    render();
+    return true;
+  } catch (error) {
+    alert(
+      "Não foi possível salvar. " +
+      "Verifique o espaço e as permissões de armazenamento do navegador."
+    );
+    return false;
+  }
+}
+
+function status(student) {
+  if (!student.ativo) {
+    return { state: "off", overdue: [], pending: null, days: 0 };
+  }
+
+  const current = today();
+  const start = validMonth(student.inicio)
+    ? student.inicio
+    : monthKey(current);
+
+  const [startYear, startMonth] = start.split("-").map(Number);
+  const cursor = new Date(startYear, startMonth - 1, 1);
+  const overdue = [];
+  let pending = null;
+
+  while (
+    cursor.getFullYear() < current.getFullYear() ||
+    (
+      cursor.getFullYear() === current.getFullYear() &&
+      cursor.getMonth() <= current.getMonth()
+    )
+  ) {
+    const key = monthKey(cursor);
+    const due = dueDate(
+      cursor.getFullYear(),
+      cursor.getMonth(),
+      student.dia
+    );
+
+    if (!(student.pagos || {})[key]) {
+      if (due < current) {
+        overdue.push({ month: key, due });
+      } else {
+        pending = { month: key, due };
+      }
+    }
+
+    cursor.setMonth(cursor.getMonth() + 1);
+  }
+
+  let days = 0;
+
+  if (overdue.length) {
+    const first = overdue[0].due;
+
+    days = Math.round(
+      (
+        Date.UTC(
+          current.getFullYear(),
+          current.getMonth(),
+          current.getDate()
+        ) -
+        Date.UTC(
+          first.getFullYear(),
+          first.getMonth(),
+          first.getDate()
+        )
+      ) / 86400000
+    );
+  }
+
+  return {
+    state: overdue.length ? "late" : pending ? "wait" : "paid",
+    overdue,
+    pending,
+    days
+  };
+}
+
+const labels = {
+  paid: "Em dia",
+  wait: "A vencer",
+  late: "Inadimplente",
+  off: "Inativo"
+};
+
+function empty(message) {
+  return `<div class="empty">${escapeHtml(message)}</div>`;
+}
+
+function showTab(name) {
+  for (const id of ["dashboard", "students", "payments", "overdue"]) {
+    $(id).hidden = id !== name;
+  }
+
+  document.querySelectorAll("[data-tab]").forEach(button => {
+    const active = button.dataset.tab === name;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+
+  if (name === "payments") fillPayment();
+}
+
+function resetStudentForm() {
+  editingId = null;
+  $("studentForm").reset();
+  $("studentStart").value = monthKey(today());
+  $("studentTitle").textContent = "Cadastrar aluno";
+  $("saveStudent").textContent = "Cadastrar aluno";
+  $("cancelEdit").hidden = true;
+}
+
+function paymentRecords() {
+  return students.flatMap(student =>
+    Object.entries(student.pagos || {}).map(([month, payment]) => ({
+      student,
+      month,
+      payment
+    }))
+  );
+}
+
+function renderDashboard() {
+  const active = students.filter(student => student.ativo);
+  const records = active.map(student => ({
+    student,
+    situation: status(student)
+  }));
+
+  const late = records.filter(item => item.situation.state === "late");
+  const paid = records.filter(item => item.situation.state === "paid");
+  const currentMonth = monthKey(today());
+
+  const received = paymentRecords()
+    .filter(item => (item.payment.data || "").slice(0, 7) === currentMonth)
+    .reduce((sum, item) => sum + Number(item.payment.valor || 0), 0);
+
+  const debt = late.reduce(
+    (sum, item) =>
+      sum + item.situation.overdue.length * Number(item.student.valor),
+    0
+  );
+
+  const expected = active.reduce(
+    (sum, student) => sum + Number(student.valor || 0),
+    0
+  );
+
+  const cards = [
+    [active.length, "Alunos ativos", ""],
+    [paid.length, "Em dia", "green"],
+    [late.length, "Inadimplentes", "red"],
+    [money(received), "Recebido neste mês", "green"],
+    [money(debt), "Mensalidades em atraso", "red"],
+    [money(expected), "Receita mensal prevista", ""]
+  ];
+
+  $("kpis").innerHTML = cards.map(([value, text, color]) => `
+    <div class="kpi">
+      <strong class="${color}">${value}</strong>
+      <span>${text}</span>
+    </div>
+  `).join("");
+
+  const months = [];
+
+  for (let index = 5; index >= 0; index--) {
+    const date = new Date(
+      today().getFullYear(),
+      today().getMonth() - index,
+      1
+    );
+
+    const key = monthKey(date);
+
+    const total = paymentRecords()
+      .filter(item => (item.payment.data || "").slice(0, 7) === key)
+      .reduce((sum, item) => sum + Number(item.payment.valor || 0), 0);
+
+    months.push({ date, total });
+  }
+
+  const maximum = Math.max(1, ...months.map(item => item.total));
+
+  $("chart").innerHTML = months.map(item => `
+    <div class="chart-row">
+      <span>${item.date.toLocaleDateString("pt-BR", { month: "short" })}</span>
+      <div class="track">
+        <div
+          class="bar"
+          style="width:${item.total / maximum * 100}%"
+        ></div>
+      </div>
+      <strong>${money(item.total)}</strong>
+    </div>
+  `).join("");
+
+  const upcoming = records.filter(item => {
+    if (item.situation.state !== "wait") return false;
+    return (
+      item.situation.pending.due - today()
+    ) / 86400000 <= 7;
+  }).sort((a, b) => a.situation.pending.due - b.situation.pending.due);
+
+  $("upcoming").innerHTML = upcoming.length
+    ? upcoming.map(({ student, situation }) => `
+      <div class="row wait">
+        <div>
+          <strong>${escapeHtml(student.nome)}</strong>
+          <div class="muted">
+            ${formatDate(dateKey(situation.pending.due))}
+          </div>
+        </div>
+        <strong>${money(student.valor)}</strong>
+      </div>
+    `).join("")
+    : empty("Nenhum vencimento nos próximos 7 dias.");
+}
+
+function renderStudents() {
+  const query = $("search").value.trim().toLocaleLowerCase("pt-BR");
+  const filter = $("statusFilter").value;
+
+  const visible = students.map(student => ({
+    student,
+    situation: status(student)
+  })).filter(({ student, situation }) =>
+    student.nome.toLocaleLowerCase("pt-BR").includes(query) &&
+    (filter === "all" || situation.state === filter)
+  ).sort((a, b) => a.student.nome.localeCompare(b.student.nome, "pt-BR"));
+
+  $("studentList").innerHTML = visible.length
+    ? visible.map(({ student, situation }) => `
+      <article class="row ${situation.state}">
+        <div>
+          <div class="name">${escapeHtml(student.nome)}</div>
+          <div>
+            <span class="tag">${labels[situation.state]}</span>
+            ${escapeHtml(student.plano)} · ${money(student.valor)}
+          </div>
+          <div class="muted">
+            Vencimento: dia ${Number(student.dia)}
+            ${student.tel ? " · " + escapeHtml(student.tel) : ""}
+          </div>
+          ${student.obs
+            ? `<div class="muted">${escapeHtml(student.obs)}</div>`
+            : ""}
+        </div>
+        <div class="actions">
+          <button class="secondary" data-edit="${escapeHtml(student.id)}">
+            Editar
+          </button>
+          <button class="secondary" data-toggle="${escapeHtml(student.id)}">
+            ${student.ativo ? "Inativar" : "Reativar"}
+          </button>
+          <button class="danger" data-delete="${escapeHtml(student.id)}">
+            Remover
+          </button>
+        </div>
+      </article>
+    `).join("")
+    : empty("Nenhum aluno encontrado.");
+}
+
+function renderPayments() {
+  const previous = $("paymentStudent").value;
+
+  $("paymentStudent").innerHTML =
+    '<option value="">Selecione um aluno</option>' +
+    students.filter(student => student.ativo)
+      .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"))
+      .map(student => `
+        <option value="${escapeHtml(student.id)}">
+          ${escapeHtml(student.nome)}
+        </option>
+      `).join("");
+
+  if (students.some(student => student.id === previous && student.ativo)) {
+    $("paymentStudent").value = previous;
+  }
+
+  const records = paymentRecords().sort((a, b) =>
+    (b.payment.data || "").localeCompare(a.payment.data || "")
+  );
+
+  $("paymentList").innerHTML = records.length
+    ? records.map(({ student, month, payment }) => `
+      <article class="row paid">
+        <div>
+          <div class="name">${escapeHtml(student.nome)}</div>
+          <div class="muted">
+            ${escapeHtml(monthLabel(month))} · ${money(payment.valor)}
+            <br>
+            ${escapeHtml(payment.metodo)} ·
+            ${escapeHtml(formatDate(payment.data))}
+          </div>
+        </div>
+        <button
+          class="danger"
+          data-undo="${escapeHtml(student.id)}"
+          data-month="${escapeHtml(month)}"
+        >Estornar</button>
+      </article>
+    `).join("")
+    : empty("Nenhum pagamento registrado.");
+}
+
+function fillPayment() {
+  const student = students.find(item =>
+    item.id === $("paymentStudent").value
+  );
+
+  $("paymentDate").value = dateKey(today());
+  $("paymentMonth").value = monthKey(today());
+  $("paymentValue").value = "";
+
+  if (!student) return;
+
+  const situation = status(student);
+
+  $("paymentMonth").value =
+    situation.overdue[0]?.month ||
+    situation.pending?.month ||
+    monthKey(today());
+
+  $("paymentValue").value = student.valor;
+}
+
+function renderOverdue() {
+  const late = students.map(student => ({
+    student,
+    situation: status(student)
+  })).filter(item => item.situation.state === "late")
+    .sort((a, b) => b.situation.days - a.situation.days);
+
+  $("overdueList").innerHTML = late.length
+    ? late.map(({ student, situation }) => {
+      let phone = String(student.tel || "").replace(/\D/g, "");
+
+      if (phone.length === 10 || phone.length === 11) {
+        phone = "55" + phone;
+      }
+
+      const total = situation.overdue.length * Number(student.valor);
+
+      const message =
+        `Olá, ${student.nome}! Há ${situation.overdue.length} ` +
+        `mensalidade(s) em aberto na Fitness Culture, ` +
+        `no total de ${money(total)}. Podemos ajudar a regularizar?`;
+
+      const link = phone
+        ? `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
+        : "";
+
+      return `
+        <article class="row late">
+          <div>
+            <div class="name">${escapeHtml(student.nome)}</div>
+            <span class="tag">${situation.days} dias de atraso</span>
+            <div class="muted">
+              ${situation.overdue.map(item =>
+                escapeHtml(monthLabel(item.month))
+              ).join(", ")}
+            </div>
+            <strong class="red">${money(total)}</strong>
+          </div>
+          <div class="actions">
+            ${link ? `
+              <a
+                class="button"
+                href="${escapeHtml(link)}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >Cobrar no WhatsApp</a>
+            ` : ""}
+            <button data-pay="${escapeHtml(student.id)}">
+              Registrar pagamento
+            </button>
+          </div>
+        </article>
+      `;
+    }).join("")
+    : empty("Nenhum aluno inadimplente.");
+}
+
+function render() {
+  renderDashboard();
+  renderStudents();
+  renderPayments();
+  renderOverdue();
+}
+
+$("loginForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const username = $("username").value.trim()
+    .replace(/\s+/g, " ")
+    .toLocaleLowerCase("pt-BR");
+
+  if (username !== USER.toLocaleLowerCase("pt-BR")) {
+    $("error").textContent = "Use o usuário Claudio Cantele.";
+    return;
+  }
+
+  if (!loadStudents()) return;
+
+  loggedIn = true;
+  $("error").textContent = "";
+  $("login").hidden = true;
+  $("app").hidden = false;
+
+  resetStudentForm();
+  fillPayment();
+  showTab("dashboard");
+  render();
+});
+
+$("logout").addEventListener("click", () => {
+  loggedIn = false;
+  students = [];
+  editingId = null;
+  $("app").hidden = true;
+  $("login").hidden = false;
+  $("username").value = USER;
+});
+
+document.querySelectorAll("[data-tab]").forEach(button => {
+  button.addEventListener("click", () => showTab(button.dataset.tab));
+});
+
+$("studentPlan").addEventListener("change", () => {
+  $("studentValue").value = prices[$("studentPlan").value];
+});
+
+$("cancelEdit").addEventListener("click", resetStudentForm);
+$("search").addEventListener("input", renderStudents);
+$("statusFilter").addEventListener("change", renderStudents);
+$("paymentStudent").addEventListener("change", fillPayment);
+
+$("studentForm").addEventListener("submit", event => {
+  event.preventDefault();
+  if (!loggedIn || !$("studentForm").reportValidity()) return;
+
+  const name = $("studentName").value.trim();
+
+  if (!name) {
+    alert("Informe o nome do aluno.");
+    return;
+  }
+
+  const fields = {
+    nome: name,
+    tel: $("studentPhone").value.trim(),
+    plano: $("studentPlan").value,
+    valor: Number($("studentValue").value),
+    dia: Number($("studentDay").value),
+    inicio: $("studentStart").value,
+    obs: $("studentNotes").value.trim()
+  };
+
+  let next;
+
+  if (editingId) {
+    next = students.map(student =>
+      student.id === editingId ? { ...student, ...fields } : student
+    );
+  } else {
+    const id = globalThis.crypto?.randomUUID
+      ? crypto.randomUUID()
+      : "a" + Date.now().toString(36) + Math.random().toString(36).slice(2);
+
+    next = [
+      ...students,
+      { id, ...fields, ativo: true, pagos: {} }
+    ];
+  }
+
+  if (saveStudents(next)) resetStudentForm();
+});
+
+$("paymentForm").addEventListener("submit", event => {
+  event.preventDefault();
+  if (!loggedIn || !$("paymentForm").reportValidity()) return;
+
+  const student = students.find(item =>
+    item.id === $("paymentStudent").value
+  );
+
+  if (!student) return;
+
+  const month = $("paymentMonth").value;
+
+  if (month < student.inicio) {
+    alert("O mês informado é anterior ao primeiro mês cobrado.");
+    return;
+  }
+
+  if ((student.pagos || {})[month]) {
+    if (!confirm("Já existe pagamento neste mês. Deseja substituí-lo?")) {
+      return;
+    }
+  }
+
+  const payment = {
+    valor: Number($("paymentValue").value),
+    data: $("paymentDate").value,
+    metodo: $("paymentMethod").value
+  };
+
+  const next = students.map(item =>
+    item.id === student.id
+      ? { ...item, pagos: { ...(item.pagos || {}), [month]: payment } }
+      : item
+  );
+
+  if (saveStudents(next)) {
+    fillPayment();
+    alert("Pagamento registrado.");
+  }
+});
+
+document.addEventListener("click", event => {
+  if (!loggedIn) return;
+
+  const button = event.target.closest("button");
+  if (!button) return;
+
+  const data = button.dataset;
+  const id = data.edit || data.toggle || data.delete || data.pay || data.undo;
+  if (!id) return;
+
+  const student = students.find(item => item.id === id);
+  if (!student) return;
+
+  if (data.edit) {
+    editingId = id;
+    showTab("students");
+
+    $("studentName").value = student.nome;
+    $("studentPhone").value = student.tel || "";
+    $("studentPlan").value = student.plano;
+    $("studentValue").value = student.valor;
+    $("studentDay").value = student.dia;
+    $("studentStart").value = student.inicio;
+    $("studentNotes").value = student.obs || "";
+    $("studentTitle").textContent = "Editar aluno";
+    $("saveStudent").textContent = "Salvar alterações";
+    $("cancelEdit").hidden = false;
+
+    $("studentForm").scrollIntoView({ behavior: "smooth" });
+    return;
+  }
+
+  if (data.toggle) {
+    const next = students.map(item =>
+      item.id === id ? { ...item, ativo: !item.ativo } : item
+    );
+    saveStudents(next);
+    return;
+  }
+
+  if (data.delete) {
+    if (confirm(`Remover ${student.nome} e todo o histórico de pagamentos?`)) {
+      if (saveStudents(students.filter(item => item.id !== id))) {
+        if (editingId === id) resetStudentForm();
+      }
+    }
+    return;
+  }
+
+  if (data.pay) {
+    showTab("payments");
+    $("paymentStudent").value = id;
+    fillPayment();
+    $("paymentForm").scrollIntoView({ behavior: "smooth" });
+    return;
+  }
+
+  if (data.undo) {
+    const month = data.month;
+
+    if (!confirm(
+      `Estornar o pagamento de ${monthLabel(month)} de ${student.nome}?`
+    )) return;
+
+    const payments = { ...(student.pagos || {}) };
+    delete payments[month];
+
+    saveStudents(students.map(item =>
+      item.id === id ? { ...item, pagos: payments } : item
+    ));
+  }
+});
+
+$("exportCsv").addEventListener("click", () => {
+  if (!loggedIn) return;
+
+  const rows = [
+    ["Nome", "WhatsApp", "Meses em atraso", "Dias de atraso", "Valor em atraso"]
+  ];
+
+  for (const student of students) {
+    const situation = status(student);
+    if (situation.state !== "late") continue;
+
+    rows.push([
+      student.nome,
+      student.tel || "",
+      situation.overdue.map(item => item.month).join(", "),
+      situation.days,
+      (situation.overdue.length * Number(student.valor)).toFixed(2)
+    ]);
+  }
+
+  function csvCell(value) {
+    let text = String(value);
+
+    // Evita interpretar textos como fórmulas ao abrir em uma planilha.
+    if (/^[\s]*[=+\-@]/.test(text)) text = "'" + text;
+
+    return '"' + text.replace(/"/g, '""') + '"';
+  }
+
+  const csv = "\uFEFF" +
+    rows.map(row => row.map(csvCell).join(";")).join("\r\n");
+
+  const url = URL.createObjectURL(new Blob([csv], {
+    type: "text/csv;charset=utf-8"
+  }));
+
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = "inadimplentes-" + dateKey(today()) + ".csv";
+
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
+</script>
 </body>
 </html>
