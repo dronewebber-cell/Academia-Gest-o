@@ -1,373 +1,1217 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover">
+
 <title>Gestão Fitness Culture</title>
 
+<link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap">
+
 <style>
+/* =========================================================
+   CORES E CONFIGURAÇÕES GERAIS
+   ========================================================= */
+
 :root {
-  --bg: #f4f6fa;
-  --card: #fff;
-  --text: #182230;
-  --muted: #667085;
-  --line: #e4e7ec;
-  --gold: #e0b84c;
-  --green: #027a48;
-  --red: #b42318;
-  --orange: #b54708;
+  --bg: #1A2029;
+  --surface: #2B3340;
+  --ink: #F0F3F7;
+  --muted: #BCC5D1;
+  --line: #495565;
+
+  --paid: #5CCB9A;
+  --paid-bg: #163A2C;
+
+  --late: #FF8C80;
+  --late-bg: #43201D;
+
+  --wait: #E8C75F;
+  --wait-bg: #3B3115;
+
+  --off: #8D98A8;
+  --accent: #E8ECF1;
+  --on-accent: #121821;
+
+  color-scheme: dark;
 }
-* { box-sizing: border-box; }
-[hidden] { display: none !important; }
+
+:root[data-theme="light"] {
+  --bg: #202630;
+  --surface: #2B3340;
+  --ink: #F0F3F7;
+  --muted: #BCC5D1;
+  --line: #495565;
+
+  --paid: #79DDB1;
+  --paid-bg: #204637;
+
+  --late: #FFA69D;
+  --late-bg: #512C2B;
+
+  --wait: #F0D37E;
+  --wait-bg: #493D20;
+
+  --off: #A7B1BF;
+  --accent: #E0B84C;
+  --on-accent: #171B23;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}
+
 body {
   margin: 0;
   background: var(--bg);
-  color: var(--text);
-  font: 16px/1.5 Arial, sans-serif;
+  color: var(--ink);
+  font: 400 16px/1.5 Barlow, system-ui, sans-serif;
 }
-main {
-  max-width: 1100px;
-  margin: auto;
-  padding: 24px 16px 60px;
+
+.wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 18px 16px 56px;
 }
-h1, h2, h3 { margin: 0 0 16px; }
-h1 { font-size: 30px; }
-h2 { font-size: 23px; }
-p { margin: 10px 0; }
-button, .button {
+
+h1 {
+  margin: 0;
+  font: 700 32px/1.05 "Barlow Condensed", Impact, sans-serif;
+}
+
+h2 {
+  margin: 0 0 10px;
+  font: 700 24px/1.1 "Barlow Condensed", Impact, sans-serif;
+}
+
+button,
+.btn {
   display: inline-block;
-  border: 0;
-  border-radius: 8px;
-  padding: 11px 16px;
-  background: var(--text);
-  color: white;
-  font: inherit;
-  cursor: pointer;
+  padding: 8px 13px;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: 600 15px Barlow, sans-serif;
   text-decoration: none;
+  cursor: pointer;
 }
-button:hover, .button:hover { opacity: .88; }
-button:disabled { opacity: .5; cursor: default; }
-button.secondary {
-  background: #edf0f5;
-  color: var(--text);
+
+button.ghost,
+.btn.ghost,
+nav button {
+  border-color: var(--line);
+  background: transparent;
+  color: var(--ink);
 }
-button.danger { background: #fee4e2; color: var(--red); }
-button.gold { background: var(--gold); color: #111; }
-input, select, textarea {
-  width: 100%;
-  padding: 11px;
-  border: 1px solid #cdd3dd;
-  border-radius: 8px;
-  background: white;
-  color: var(--text);
-  font: inherit;
+
+button.danger {
+  border-color: var(--late);
+  background: transparent;
+  color: var(--late);
 }
-input:focus, select:focus, textarea:focus, button:focus-visible {
-  outline: 3px solid #e0b84c88;
+
+button:disabled {
+  opacity: .65;
+  cursor: wait;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+.btn:focus-visible {
+  outline: 3px solid var(--wait);
   outline-offset: 2px;
 }
+
 label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 3px;
+  color: var(--muted);
   font-size: 14px;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+}
+
+.card {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.note,
+.meta,
+.who {
   color: var(--muted);
 }
-.card {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 16px;
+
+.note {
+  margin-top: 8px;
+  font-size: 13px;
 }
-.top, .actions {
+
+.meta,
+.who {
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+/* =========================================================
+   LOGO E CABEÇALHO
+   ========================================================= */
+
+.brand {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
+  gap: 16px;
+  min-width: 0;
 }
-.actions { justify-content: flex-start; }
-.top { margin-bottom: 20px; }
-.muted { color: var(--muted); font-size: 14px; }
+
+.brand-logo {
+  flex-shrink: 0;
+  width: 90px;
+  height: 90px;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.brand-app .brand-logo {
+  width: 56px;
+  height: 56px;
+}
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+[data-theme="light"] .top h1 {
+  padding-left: 12px;
+  border-left: 5px solid #E0B84C;
+}
+
+/* =========================================================
+   LOGIN CENTRALIZADO E IMAGEM DE FUNDO
+   ========================================================= */
+
+body.login-screen {
+  background: #10151C;
+}
+
+body.login-screen::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      rgba(8, 12, 18, .38),
+      rgba(8, 12, 18, .65)
+    ),
+    url("fundo-academia.png") center/cover no-repeat;
+}
+
+body.login-screen .wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 24px 16px;
+}
+
+#gate {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 28px 30px 32px;
+  border: 1px solid rgba(224, 184, 76, .3);
+  border-radius: 18px;
+  background: rgba(27, 36, 48, .92);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .5);
+  backdrop-filter: blur(8px);
+  flex-shrink: 0;
+}
+
+#gate .brand {
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+#gate .brand-logo {
+  width: 120px;
+  height: 120px;
+}
+
+#gate .brand h1 {
+  margin: 0;
+  padding-left: 14px;
+  border-left: 6px solid #E0B84C;
+  font-size: clamp(42px, 7vw, 72px);
+  line-height: .95;
+}
+
+#gateMsg {
+  margin: 0 0 20px;
+  color: var(--muted);
+  font-size: 19px;
+  line-height: 1.5;
+}
+
+#gate label {
+  font-size: 17px;
+}
+
+#gate input,
+#gate select {
+  min-height: 54px;
+  padding: 12px;
+  font-size: 20px;
+}
+
+#gate .note {
+  font-size: 15px;
+}
+
+.access-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.access-options button {
+  min-height: 96px;
+  padding: 18px 12px;
+  border-radius: 10px;
+  background: #E0B84C;
+  color: #171B23;
+  font-size: 25px;
+}
+
+#lf label {
+  margin-top: 20px;
+}
+
+#lf input {
+  padding: 12px;
+  border: 0;
+  border-bottom: 2px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+}
+
+#lf input:focus {
+  border-bottom-color: #E0B84C;
+}
+
+#lfErr {
+  min-height: 1.4em;
+  margin: 12px 0 0;
+  color: var(--late);
+}
+
+#lfBtn,
+#retry {
+  display: block;
+  width: 100%;
+  min-height: 58px;
+  margin: 16px auto 0;
+  padding: 16px;
+  text-align: center;
+  font-size: 23px;
+}
+
+#lfBtn {
+  border: 0;
+  border-radius: 4px;
+  background: #E0B84C;
+  color: #000;
+  font-family: "Barlow Condensed", Impact, sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+#lfBtn:hover,
+#student-signup button[type="submit"]:hover {
+  filter: brightness(1.1);
+}
+
+#retry {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+}
+
+#student-signup label {
+  margin-top: 14px;
+}
+
+/* Mesmas dimensões para Enviar cadastro e Voltar. */
+#gate #student-signup button[type="submit"],
+#gate #access-back {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  margin: 16px 0 0;
+  padding: 10px;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+#gate #student-signup button[type="submit"] {
+  border: 0;
+  border-radius: 8px;
+  background: #E0B84C;
+  color: #171B23;
+}
+
+/* =========================================================
+   ABAS DOS ALUNOS E CARTÕES DE VALORES
+   ========================================================= */
+
+.student-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+#gate .student-tabs button {
+  flex: 1;
+  min-height: 46px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 18px;
+}
+
+#gate .student-tabs button[aria-selected="true"] {
+  border-color: #E0B84C;
+  background: #E0B84C;
+  color: #171B23;
+}
+
+#student-prices-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.student-price {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 166px;
+  padding: 22px;
+  overflow: hidden;
+  border: 1px solid rgba(224, 184, 76, .45);
+  border-radius: 12px;
+  background: linear-gradient(135deg, #303745, #1A2029);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .22);
+}
+
+.student-price::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  background: #E0B84C;
+}
+
+.student-price:first-child {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  align-items: center;
+  min-height: 142px;
+  border-color: #E0B84C;
+  background: linear-gradient(120deg, #3D3623, #262A32);
+}
+
+.student-price strong {
+  color: #F0F3F7;
+  font: 700 24px/1.15 "Barlow Condensed", Impact, sans-serif;
+  letter-spacing: .5px;
+}
+
+.student-price span {
+  color: #F0CF75;
+  font: 700 36px/1.1 "Barlow Condensed", Impact, sans-serif;
+  white-space: nowrap;
+}
+
+.student-price small {
+  display: block;
+  margin-top: 7px;
+  color: #D0D6DF;
+  font-size: 14px;
+}
+
+.student-price:first-child small {
+  text-align: right;
+}
+
+/* =========================================================
+   PAINEL, FORMULÁRIOS E LISTAGENS
+   ========================================================= */
+
 nav {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 20px;
+  gap: 6px;
+  margin-bottom: 14px;
 }
-nav button { background: #e7ebf1; color: var(--text); }
-nav button.active { background: var(--text); color: white; }
+
+nav button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+[data-theme="light"] nav button {
+  border-radius: 99px;
+}
+
 .kpis {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: 10px;
+  margin-bottom: 14px;
 }
-.kpi {
-  padding: 20px;
+
+.kpis div {
+  padding: 12px 14px;
   border: 1px solid var(--line);
-  border-radius: 12px;
-  background: white;
+  border-radius: 8px;
+  background: var(--surface);
 }
-.kpi strong { display: block; font-size: 29px; }
-.kpi span { color: var(--muted); font-size: 14px; }
-.green { color: var(--green); }
-.red { color: var(--red); }
+
+.kpis b {
+  display: block;
+  font: 700 30px/1 "Barlow Condensed", Impact, sans-serif;
+}
+
+.kpis span {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.k-late b {
+  color: var(--late);
+}
+
+.k-paid b {
+  color: var(--paid);
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 12px;
+}
+
 .form {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
+  align-items: end;
+  gap: 10px;
+  margin-bottom: 14px;
 }
-.wide { grid-column: span 2; }
-.full { grid-column: 1 / -1; }
-.filters {
+
+.form .w2 {
+  grid-column: span 2;
+}
+
+.form .w4 {
+  grid-column: 1 / -1;
+}
+
+.bar {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-.filters > * { flex: 1; min-width: 180px; }
-.row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 14px;
-  padding: 16px;
+  gap: 8px;
   margin-bottom: 10px;
-  background: white;
-  border: 1px solid var(--line);
-  border-left: 5px solid #98a2b3;
-  border-radius: 10px;
 }
-.row.paid { border-left-color: var(--green); }
-.row.late { border-left-color: var(--red); }
-.row.wait { border-left-color: var(--orange); }
-.row.off { opacity: .7; }
-.name { font-size: 19px; font-weight: bold; }
+
+.bar input,
+.bar select {
+  flex: 1;
+  width: auto;
+  min-width: 140px;
+}
+
+.list {
+  display: grid;
+  gap: 8px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 6px 12px;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-left-width: 6px;
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.row.paid {
+  border-left-color: var(--paid);
+}
+
+.row.late {
+  border-left-color: var(--late);
+}
+
+.row.wait {
+  border-left-color: var(--wait);
+}
+
+.row.off {
+  border-left-color: var(--off);
+  opacity: .75;
+}
+
+.name {
+  font: 700 21px/1.1 "Barlow Condensed", Impact, sans-serif;
+}
+
 .tag {
   display: inline-block;
-  padding: 3px 9px;
-  margin: 5px 6px 5px 0;
-  border-radius: 20px;
-  background: #edf0f5;
-  font-size: 12px;
-  font-weight: bold;
-}
-.paid .tag { background: #d1fadf; color: var(--green); }
-.late .tag { background: #fee4e2; color: var(--red); }
-.wait .tag { background: #fef0c7; color: var(--orange); }
-.empty {
-  padding: 28px;
-  text-align: center;
+  margin-right: 6px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  background: var(--bg);
   color: var(--muted);
-  border: 1px dashed #cdd3dd;
-  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
 }
-#login {
-  max-width: 410px;
-  margin: 12vh auto;
-  padding: 28px;
-  background: #182230;
-  border-radius: 14px;
-  color: white;
+
+.paid .tag {
+  background: var(--paid-bg);
+  color: var(--paid);
 }
-#login h1 {
-  border-left: 5px solid var(--gold);
-  padding-left: 14px;
+
+.late .tag {
+  background: var(--late-bg);
+  color: var(--late);
 }
-#login label { color: #d0d5dd; }
-#login button { width: 100%; margin-top: 18px; }
-#error { color: #fda29b; min-height: 24px; }
-#notice {
-  background: #fff5d6;
+
+.wait .tag {
+  background: var(--wait-bg);
+  color: var(--wait);
+}
+
+.empty {
+  padding: 26px 14px;
+  border: 1px dashed var(--line);
   border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 18px;
-  font-size: 14px;
+  background: var(--surface);
+  color: var(--muted);
+  text-align: center;
 }
-.chart-row {
-  display: grid;
-  grid-template-columns: 65px 1fr 110px;
-  align-items: center;
-  gap: 10px;
-  margin: 12px 0;
-  font-size: 14px;
+
+.chart text {
+  fill: var(--muted);
+  font: 12px Barlow, sans-serif;
 }
-.track { background: #edf0f5; border-radius: 5px; overflow: hidden; }
-.bar { height: 18px; background: var(--gold); min-width: 0; }
-@media (max-width: 720px) {
-  .kpis, .form { grid-template-columns: repeat(2, 1fr); }
-  .wide { grid-column: 1 / -1; }
-  .row { align-items: flex-start; }
-  .row .actions { width: 100%; }
+
+.chart rect {
+  fill: var(--accent);
 }
+
+.chart .cur {
+  fill: var(--paid);
+}
+
+.up {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 15px;
+}
+
+.up:last-child {
+  border-bottom: 0;
+}
+
+[data-theme="light"] .card,
+[data-theme="light"] .row,
+[data-theme="light"] .kpis div {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .14);
+}
+
+/* =========================================================
+   ADAPTAÇÃO PARA CELULAR
+   ========================================================= */
+
+@media (max-width: 700px) {
+  .kpis {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .grid2 {
+    grid-template-columns: 1fr;
+  }
+
+  .form {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .form .w2 {
+    grid-column: 1 / -1;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 600px) {
+  #gate {
+    padding: 22px 18px 26px;
+  }
+
+  #gate .brand {
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  #gate .brand-logo {
+    width: 82px;
+    height: 82px;
+  }
+
+  #gate .brand h1 {
+    font-size: clamp(34px, 9vw, 52px);
+  }
+
+  #gate .access-options {
+    gap: 12px;
+  }
+
+  #gate .access-options button {
+    min-height: 80px;
+    font-size: 22px;
+  }
+
+  #gateMsg {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 440px) {
+  #student-prices-list {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .student-price,
+  .student-price:first-child {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    min-height: 116px;
+    padding: 18px;
+  }
+
+  .student-price strong {
+    max-width: 48%;
+    font-size: 22px;
+  }
+
+  .student-price span {
+    font-size: 30px;
+  }
+
+  .student-price small {
+    font-size: 13px;
+    text-align: right;
+  }
+}
+
 @media (max-width: 400px) {
-  .form, .kpis { grid-template-columns: 1fr; }
-  .wide, .full { grid-column: 1; }
-  .chart-row { grid-template-columns: 48px 1fr 94px; font-size: 12px; }
+  .brand {
+    gap: 10px;
+  }
+
+  .brand-app h1 {
+    font-size: 28px;
+  }
+
+  .brand-app .brand-logo {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-width: 360px) {
+  #gate .brand-logo {
+    width: 64px;
+    height: 64px;
+  }
+
+  #gate .brand h1 {
+    font-size: 32px;
+  }
+
+  #gate .access-options {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
 </head>
 
 <body>
-<main>
+<div class="wrap">
 
-<section id="login">
-  <h1>Gestão<br>Fitness Culture</h1>
-  <p>Entre com seu usuário. Não é necessária senha.</p>
+  <!-- =====================================================
+       TELA DE LOGIN
+       ===================================================== -->
 
-  <form id="loginForm">
-    <label for="username">Usuário</label>
-    <input
-      id="username"
-      value="Claudio Cantele"
-      autocomplete="username"
-      required
+  <section id="gate" class="card gate">
+
+    <div class="brand">
+      <img
+        class="brand-logo"
+        src="logo-fitness.png"
+        alt="Símbolo Fitness Culture"
+      >
+      <h1>Gestão<br>Fitness Culture</h1>
+    </div>
+
+    <div id="access-options" class="access-options">
+      <button type="button" id="access-staff">
+        Funcionários
+      </button>
+
+      <button type="button" id="access-student">
+        Alunos
+      </button>
+    </div>
+
+    <p id="gateMsg">Escolha como deseja acessar.</p>
+
+    <!-- Área pública dos alunos. -->
+    <section id="student-area" hidden>
+
+      <div
+        class="student-tabs"
+        role="tablist"
+        aria-label="Área do aluno"
+      >
+        <button
+          type="button"
+          role="tab"
+          id="student-tab-signup"
+          aria-selected="true"
+          aria-controls="student-panel-signup"
+        >
+          Cadastro
+        </button>
+
+        <button
+          type="button"
+          role="tab"
+          id="student-tab-prices"
+          aria-selected="false"
+          aria-controls="student-panel-prices"
+          tabindex="-1"
+        >
+          Valores
+        </button>
+      </div>
+
+      <div
+        id="student-panel-signup"
+        role="tabpanel"
+        aria-labelledby="student-tab-signup"
+      >
+        <form id="student-signup">
+          <h2>Cadastro de aluno</h2>
+
+          <label for="student-name">Nome completo</label>
+          <input
+            id="student-name"
+            required
+            maxlength="60"
+            autocomplete="name"
+          >
+
+          <label for="student-cpf">CPF</label>
+          <input
+            id="student-cpf"
+            required
+            inputmode="numeric"
+            maxlength="14"
+            placeholder="000.000.000-00"
+          >
+
+          <label for="student-phone">Telefone com DDD</label>
+          <input
+            id="student-phone"
+            required
+            type="tel"
+            inputmode="tel"
+            maxlength="20"
+            autocomplete="tel"
+          >
+
+          <p
+            class="note"
+            id="student-feedback"
+            role="status"
+          ></p>
+
+          <button type="submit">Enviar cadastro</button>
+        </form>
+      </div>
+
+      <div
+        id="student-panel-prices"
+        role="tabpanel"
+        aria-labelledby="student-tab-prices"
+        hidden
+      >
+        <h2>Tabela de valores</h2>
+        <div id="student-prices-list"></div>
+      </div>
+
+    </section>
+
+    <button
+      type="button"
+      id="access-back"
+      class="ghost"
+      hidden
     >
-    <p id="error" role="alert"></p>
-    <button class="gold" type="submit">Entrar</button>
-  </form>
-</section>
+      Voltar
+    </button>
 
-<section id="app" hidden>
-  <header class="top">
-    <div>
-      <h1>Gestão Fitness Culture</h1>
-      <div class="muted">Administrador: Claudio Cantele</div>
-    </div>
-    <button id="logout" class="secondary">Sair</button>
-  </header>
+    <button id="retry" hidden>
+      Verificar acesso de novo
+    </button>
 
-  <div id="notice">
-    Versão local: os dados ficam neste navegador.
-    O acesso usa apenas o nome, sem proteção por senha.
-  </div>
+    <!-- Login dos funcionários. -->
+    <form id="lf" hidden novalidate>
 
-  <nav aria-label="Menu principal">
-    <button data-tab="dashboard" class="active">Painel</button>
-    <button data-tab="students">Alunos</button>
-    <button data-tab="payments">Pagamentos</button>
-    <button data-tab="overdue">Inadimplentes</button>
-  </nav>
+      <label for="l-user">Usuário</label>
+      <select id="l-user">
+        <option>Claudio Cantele</option>
+        <option>Mauricio</option>
+        <option>Taisla</option>
+      </select>
 
-  <section id="dashboard">
-    <div id="kpis" class="kpis"></div>
+      <label for="l-pass">Senha</label>
+      <input
+        id="l-pass"
+        type="password"
+        disabled
+        hidden
+        maxlength="64"
+        autocomplete="current-password"
+      >
 
-    <div class="card">
-      <h2>Recebimentos nos últimos 6 meses</h2>
-      <p class="muted">
-        Valores agrupados pela data em que o pagamento foi recebido.
-      </p>
-      <div id="chart"></div>
-    </div>
+      <div id="l-conf" hidden>
+        <label for="l-pass2">Repita a senha</label>
+        <input
+          id="l-pass2"
+          disabled
+          type="password"
+          maxlength="64"
+          autocomplete="new-password"
+        >
+      </div>
 
-    <div class="card">
-      <h2>Vencimentos nos próximos 7 dias</h2>
-      <div id="upcoming"></div>
-    </div>
+      <p class="note" id="lfErr" role="alert"></p>
+
+      <button type="submit" id="lfBtn">
+        Entrar
+      </button>
+    </form>
+
   </section>
 
-  <section id="students" hidden>
-    <div class="card">
-      <h2 id="studentTitle">Cadastrar aluno</h2>
+  <!-- =====================================================
+       APLICATIVO
+       ===================================================== -->
 
-      <form id="studentForm" class="form">
-        <div class="wide">
-          <label for="studentName">Nome completo</label>
-          <input id="studentName" required maxlength="120">
-        </div>
+  <section id="app" hidden>
 
-        <div class="wide">
-          <label for="studentPhone">WhatsApp com DDD</label>
-          <input id="studentPhone" type="tel" maxlength="25">
-        </div>
-
-        <div>
-          <label for="studentPlan">Plano</label>
-          <select id="studentPlan">
-            <option value="Básico">Básico</option>
-            <option value="Completo">Completo</option>
-            <option value="Premium">Premium</option>
-          </select>
-        </div>
+    <div class="top">
+      <div class="brand brand-app">
+        <img
+          class="brand-logo"
+          src="logo-fitness.png"
+          alt="Símbolo Fitness Culture"
+        >
 
         <div>
-          <label for="studentValue">Mensalidade (R$)</label>
+          <h1>Gestão Fitness Culture</h1>
+          <div class="who" id="who"></div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="ghost" id="csv">
+          Exportar inadimplentes (CSV)
+        </button>
+
+        <button class="ghost" id="sair">
+          Sair
+        </button>
+      </div>
+    </div>
+
+    <nav id="nav">
+      <button data-t="painel" aria-pressed="true">
+        Painel
+      </button>
+
+      <button data-t="alunos" aria-pressed="false">
+        Alunos
+      </button>
+
+      <button data-t="pag" aria-pressed="false">
+        Pagamentos
+      </button>
+
+      <button data-t="inad" aria-pressed="false">
+        Inadimplentes
+      </button>
+
+      <button data-t="adm" aria-pressed="false">
+        Administradores
+      </button>
+    </nav>
+
+    <div class="note" id="loadnote" hidden>
+      Carregando dados…
+    </div>
+
+    <!-- PAINEL -->
+    <div id="t-painel">
+      <div class="kpis" id="kpis"></div>
+
+      <div class="grid2">
+        <div class="card">
+          <h2>Receita aprovada, últimos 6 meses</h2>
+
+          <svg
+            class="chart"
+            id="chart"
+            viewBox="0 0 420 190"
+            width="100%"
+            role="img"
+            aria-label="Receita por mês"
+          ></svg>
+        </div>
+
+        <div class="card">
+          <h2>Vencem nos próximos 7 dias</h2>
+          <div id="ups"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALUNOS -->
+    <div id="t-alunos" hidden>
+
+      <form class="form card" id="fa">
+
+        <div class="w2">
+          <label for="a-nome">Nome</label>
+          <input id="a-nome" required maxlength="60">
+        </div>
+
+        <div class="w2">
+          <label for="a-tel">WhatsApp (com DDD)</label>
+          <input id="a-tel" inputmode="tel" maxlength="20">
+        </div>
+
+        <div class="w2">
+          <label for="a-cpf">CPF</label>
           <input
-            id="studentValue"
+            id="a-cpf"
+            inputmode="numeric"
+            maxlength="14"
+            placeholder="000.000.000-00"
+          >
+        </div>
+
+        <div>
+          <label for="a-plano">Plano</label>
+          <select id="a-plano"></select>
+        </div>
+
+        <div>
+          <label for="a-valor">Mensalidade (R$)</label>
+          <input
+            id="a-valor"
             type="number"
-            min="0.01"
+            min="1"
             step="0.01"
-            value="110"
             required
           >
         </div>
 
         <div>
-          <label for="studentDay">Dia do vencimento</label>
+          <label for="a-dia">Vence no dia</label>
           <input
-            id="studentDay"
+            id="a-dia"
             type="number"
             min="1"
-            max="31"
+            max="28"
             value="10"
             required
           >
         </div>
 
         <div>
-          <label for="studentStart">Primeiro mês cobrado</label>
-          <input id="studentStart" type="month" required>
+          <label for="a-ini">Início</label>
+          <input id="a-ini" type="month" required>
         </div>
 
-        <div class="full">
-          <label for="studentNotes">Observações</label>
-          <textarea id="studentNotes" rows="2" maxlength="1000"></textarea>
+        <div class="w4">
+          <label for="a-obs">Anamnese</label>
+          <input id="a-obs" maxlength="160">
         </div>
 
-        <div class="full actions">
-          <button id="saveStudent" type="submit">Cadastrar aluno</button>
-          <button id="cancelEdit" type="button" class="secondary" hidden>
+        <div class="w4">
+          <button type="submit" id="a-save">
+            Cadastrar aluno
+          </button>
+
+          <button
+            type="button"
+            class="ghost"
+            id="a-cancel"
+            hidden
+          >
             Cancelar edição
           </button>
         </div>
+
       </form>
+
+      <div class="bar">
+        <input
+          id="q"
+          placeholder="Buscar por nome"
+          aria-label="Buscar aluno"
+        >
+
+        <select id="fs" aria-label="Filtrar por situação">
+          <option value="todos">Todas as situações</option>
+          <option value="paid">Em dia</option>
+          <option value="wait">A vencer</option>
+          <option value="late">Inadimplentes</option>
+          <option value="off">Inativos</option>
+        </select>
+      </div>
+
+      <div class="list" id="la"></div>
+
+      <div
+        id="student-pending"
+        class="card"
+        style="margin-top:16px"
+        hidden
+      >
+        <h2>Cadastros enviados pelos alunos</h2>
+
+        <p class="note">
+          Clique em Cadastrar aluno para preencher o formulário
+          e definir plano e mensalidade.
+        </p>
+
+        <div id="student-pending-list"></div>
+      </div>
+
     </div>
 
-    <div class="filters">
-      <input id="search" placeholder="Buscar aluno pelo nome" aria-label="Buscar aluno">
-      <select id="statusFilter" aria-label="Filtrar situação">
-        <option value="all">Todos os alunos</option>
-        <option value="paid">Em dia</option>
-        <option value="wait">A vencer</option>
-        <option value="late">Inadimplentes</option>
-        <option value="off">Inativos</option>
-      </select>
-    </div>
+    <!-- PAGAMENTOS -->
+    <div id="t-pag" hidden>
 
-    <div id="studentList"></div>
-  </section>
-
-  <section id="payments" hidden>
-    <div class="card">
-      <h2>Registrar pagamento</h2>
-
-      <form id="paymentForm" class="form">
-        <div class="wide">
-          <label for="paymentStudent">Aluno</label>
-          <select id="paymentStudent" required></select>
+      <form class="form card" id="fp">
+        <div class="w2">
+          <label for="p-aluno">Aluno</label>
+          <select id="p-aluno" required></select>
         </div>
 
         <div>
-          <label for="paymentMonth">Mês de referência</label>
-          <input id="paymentMonth" type="month" required>
+          <label for="p-mes">Mês de referência</label>
+          <input id="p-mes" type="month" required>
         </div>
 
         <div>
-          <label for="paymentValue">Valor recebido (R$)</label>
+          <label for="p-met">Forma de pagamento</label>
+          <select id="p-met">
+            <option>Pix</option>
+            <option>Cartão</option>
+            <option>Dinheiro</option>
+            <option>Boleto</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="p-data">Data do pagamento</label>
+          <input id="p-data" type="date" required>
+        </div>
+
+        <div>
+          <label for="p-valor">Valor (R$)</label>
           <input
-            id="paymentValue"
+            id="p-valor"
             type="number"
             min="0.01"
             step="0.01"
@@ -375,780 +1219,2107 @@ nav button.active { background: var(--text); color: white; }
           >
         </div>
 
-        <div class="wide">
-          <label for="paymentDate">Data do pagamento</label>
-          <input id="paymentDate" type="date" required>
-        </div>
-
-        <div class="wide">
-          <label for="paymentMethod">Forma de pagamento</label>
-          <select id="paymentMethod">
-            <option>Pix</option>
-            <option>Dinheiro</option>
-            <option>Cartão de débito</option>
-            <option>Cartão de crédito</option>
-            <option>Transferência</option>
-          </select>
-        </div>
-
-        <div class="full">
-          <button type="submit">Confirmar pagamento</button>
+        <div class="w2">
+          <button type="submit">Aprovar pagamento</button>
         </div>
       </form>
+
+      <h2>Últimos pagamentos aprovados</h2>
+      <div class="list" id="lp"></div>
     </div>
 
-    <h2>Histórico de pagamentos</h2>
-    <div id="paymentList"></div>
-  </section>
-
-  <section id="overdue" hidden>
-    <div class="top">
-      <h2>Alunos inadimplentes</h2>
-      <button id="exportCsv" class="secondary">Exportar CSV</button>
+    <!-- INADIMPLENTES -->
+    <div id="t-inad" hidden>
+      <div class="list" id="li"></div>
     </div>
-    <div id="overdueList"></div>
-  </section>
-</section>
 
-</main>
+    <!-- ADMINISTRAÇÃO -->
+    <div id="t-adm" hidden>
+
+      <div class="grid2">
+
+        <form class="card" id="f-pass">
+          <h2>Alterar minha senha</h2>
+
+          <label for="s-atual">Senha atual</label>
+          <input
+            id="s-atual"
+            type="password"
+            required
+            maxlength="64"
+            autocomplete="current-password"
+          >
+
+          <label for="s-nova" style="margin-top:8px">
+            Nova senha
+          </label>
+          <input
+            id="s-nova"
+            type="password"
+            required
+            maxlength="64"
+            autocomplete="new-password"
+          >
+
+          <label for="s-nova2" style="margin-top:8px">
+            Repita a nova senha
+          </label>
+          <input
+            id="s-nova2"
+            type="password"
+            required
+            maxlength="64"
+            autocomplete="new-password"
+          >
+
+          <p class="note" id="m-pass" role="status"></p>
+
+          <button type="submit">Salvar nova senha</button>
+        </form>
+
+        <form class="card" id="f-addadm">
+          <h2>Adicionar administrador</h2>
+
+          <label for="n-user">Usuário</label>
+          <input
+            id="n-user"
+            required
+            maxlength="30"
+            autocomplete="off"
+          >
+
+          <label for="n-pass" style="margin-top:8px">
+            Senha inicial
+          </label>
+          <input
+            id="n-pass"
+            type="password"
+            required
+            maxlength="64"
+            autocomplete="new-password"
+          >
+
+          <p class="note" id="m-add" role="status"></p>
+
+          <button type="submit">Adicionar administrador</button>
+        </form>
+
+      </div>
+
+      <h2 style="margin-top:14px">Administradores</h2>
+      <div class="list" id="adm-list"></div>
+    </div>
+
+  </section>
+</div>
 
 <script>
-"use strict";
+/* =========================================================
+   CONFIGURAÇÕES E FUNÇÕES AUXILIARES
+   ========================================================= */
 
-const USER = "Claudio Cantele";
+const MESES = [
+  "janeiro", "fevereiro", "março", "abril",
+  "maio", "junho", "julho", "agosto",
+  "setembro", "outubro", "novembro", "dezembro"
+];
 
-/* Mantém a chave usada na versão anterior para preservar os alunos. */
-const STORAGE_KEY = "fitness-culture-demo-v1";
+/*
+ * Planos internos existentes no formulário administrativo.
+ * A tabela pública dos alunos é definida em abaAluno().
+ */
+const PLANOS = [
+  { n: "Básico", v: 110 },
+  { n: "Completo", v: 150 },
+  { n: "Premium", v: 200 }
+];
+
+const USUARIO_UNICO = "Claudio Cantele";
+
+const PRECADASTROS_KEY = "fitness-culture-pre-cadastros-v1";
+
+const hoje = new Date();
+hoje.setHours(0, 0, 0, 0);
 
 const $ = id => document.getElementById(id);
-const prices = { "Básico": 110, "Completo": 150, "Premium": 200 };
 
-let students = [];
-let editingId = null;
-let loggedIn = false;
+const key = (y, m) =>
+  y + "-" + String(m + 1).padStart(2, "0");
 
-function escapeHtml(value) {
-  return String(value ?? "").replace(/[&<>"']/g, character => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[character]);
-}
+const mesAtual = key(
+  hoje.getFullYear(),
+  hoje.getMonth()
+);
 
-function money(value) {
-  return Number(value || 0).toLocaleString("pt-BR", {
+const nomeMes = k => {
+  const partes = k.split("-");
+  return MESES[Number(partes[1]) - 1] + "/" + partes[0];
+};
+
+const brl = n =>
+  (+n || 0).toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL"
   });
-}
 
-function today() {
-  const date = new Date();
-  date.setHours(0, 0, 0, 0);
-  return date;
-}
+const esc = s =>
+  String(s == null ? "" : s).replace(
+    /[&<>"']/g,
+    caractere => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    }[caractere])
+  );
 
-function dateKey(date) {
-  return [
-    date.getFullYear(),
-    String(date.getMonth() + 1).padStart(2, "0"),
-    String(date.getDate()).padStart(2, "0")
-  ].join("-");
-}
+const iso = data =>
+  data.getFullYear() + "-" +
+  String(data.getMonth() + 1).padStart(2, "0") + "-" +
+  String(data.getDate()).padStart(2, "0");
 
-function monthKey(date) {
-  return dateKey(date).slice(0, 7);
-}
+const fdata = texto =>
+  texto ? texto.split("-").reverse().join("/") : "";
 
-function monthLabel(value) {
-  const [year, month] = value.split("-").map(Number);
-  return new Date(year, month - 1, 1).toLocaleDateString("pt-BR", {
-    month: "long",
-    year: "numeric"
-  });
-}
+let db = null;
+let alunos = [];
+let editId = null;
+let aba = "painel";
+let unsub = null;
+let unsubAdm = null;
 
-function formatDate(value) {
-  return value ? value.split("-").reverse().join("/") : "";
-}
+let adminUser = "";
+let adminHash = "";
+let adminsList = [];
 
-function validMonth(value) {
-  return /^\d{4}-(0[1-9]|1[0-2])$/.test(value || "");
-}
+let perfilCadastro = false;
+let preCadastroId = null;
 
-function dueDate(year, month, day) {
-  const lastDay = new Date(year, month + 1, 0).getDate();
-  return new Date(year, month, Math.min(Number(day), lastDay));
-}
+/* =========================================================
+   SITUAÇÃO FINANCEIRA DO ALUNO
+   ========================================================= */
 
-function loadStudents() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-
-    if (!Array.isArray(saved)) {
-      throw new Error("Formato de dados inválido.");
-    }
-
-    students = saved;
-    return true;
-  } catch (error) {
-    alert(
-      "Não foi possível ler os dados salvos. " +
-      "Verifique se o navegador permite armazenamento local."
-    );
-    return false;
-  }
-}
-
-/* Só atualiza a tela depois que o armazenamento confirma a gravação. */
-function saveStudents(next) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-    students = next;
-    render();
-    return true;
-  } catch (error) {
-    alert(
-      "Não foi possível salvar. " +
-      "Verifique o espaço e as permissões de armazenamento do navegador."
-    );
-    return false;
-  }
-}
-
-function status(student) {
-  if (!student.ativo) {
-    return { state: "off", overdue: [], pending: null, days: 0 };
-  }
-
-  const current = today();
-  const start = validMonth(student.inicio)
-    ? student.inicio
-    : monthKey(current);
-
-  const [startYear, startMonth] = start.split("-").map(Number);
-  const cursor = new Date(startYear, startMonth - 1, 1);
-  const overdue = [];
-  let pending = null;
-
-  while (
-    cursor.getFullYear() < current.getFullYear() ||
-    (
-      cursor.getFullYear() === current.getFullYear() &&
-      cursor.getMonth() <= current.getMonth()
-    )
-  ) {
-    const key = monthKey(cursor);
-    const due = dueDate(
-      cursor.getFullYear(),
-      cursor.getMonth(),
-      student.dia
-    );
-
-    if (!(student.pagos || {})[key]) {
-      if (due < current) {
-        overdue.push({ month: key, due });
-      } else {
-        pending = { month: key, due };
-      }
-    }
-
-    cursor.setMonth(cursor.getMonth() + 1);
-  }
-
-  let days = 0;
-
-  if (overdue.length) {
-    const first = overdue[0].due;
-
-    days = Math.round(
-      (
-        Date.UTC(
-          current.getFullYear(),
-          current.getMonth(),
-          current.getDate()
-        ) -
-        Date.UTC(
-          first.getFullYear(),
-          first.getMonth(),
-          first.getDate()
-        )
-      ) / 86400000
-    );
-  }
-
-  return {
-    state: overdue.length ? "late" : pending ? "wait" : "paid",
-    overdue,
-    pending,
-    days
-  };
-}
-
-const labels = {
+const rotulo = {
   paid: "Em dia",
   wait: "A vencer",
   late: "Inadimplente",
   off: "Inativo"
 };
 
-function empty(message) {
-  return `<div class="empty">${escapeHtml(message)}</div>`;
-}
-
-function showTab(name) {
-  for (const id of ["dashboard", "students", "payments", "overdue"]) {
-    $(id).hidden = id !== name;
+function situacao(aluno) {
+  if (!aluno.ativo) {
+    return {
+      estado: "off",
+      atrasados: [],
+      proximo: null,
+      dias: 0
+    };
   }
 
-  document.querySelectorAll("[data-tab]").forEach(button => {
-    const active = button.dataset.tab === name;
-    button.classList.toggle("active", active);
-    button.setAttribute("aria-pressed", String(active));
+  const pagos = aluno.pagos || {};
+
+  const inicio = (aluno.inicio || mesAtual)
+    .split("-")
+    .map(Number);
+
+  const atrasados = [];
+
+  let pend = null;
+  let ano = inicio[0];
+  let mes = inicio[1] - 1;
+
+  while (
+    ano < hoje.getFullYear() ||
+    (
+      ano === hoje.getFullYear() &&
+      mes <= hoje.getMonth()
+    )
+  ) {
+    const referencia = key(ano, mes);
+
+    if (!pagos[referencia]) {
+      const vencimento = new Date(ano, mes, aluno.dia);
+
+      if (vencimento < hoje) {
+        atrasados.push({
+          k: referencia,
+          venc: vencimento
+        });
+      } else {
+        pend = {
+          k: referencia,
+          venc: vencimento
+        };
+      }
+    }
+
+    mes++;
+
+    if (mes > 11) {
+      mes = 0;
+      ano++;
+    }
+  }
+
+  const proximo = atrasados.length
+    ? atrasados[0].k
+    : (pend ? pend.k : null);
+
+  const dias = atrasados.length
+    ? Math.floor((hoje - atrasados[0].venc) / 86400000)
+    : 0;
+
+  return {
+    estado: atrasados.length
+      ? "late"
+      : (pend ? "wait" : "paid"),
+
+    atrasados,
+    proximo,
+    dias,
+    pend
+  };
+}
+
+function dados() {
+  return alunos.map(aluno => ({
+    a: aluno,
+    s: situacao(aluno)
+  }));
+}
+
+/* =========================================================
+   PAINEL PRINCIPAL
+   ========================================================= */
+
+function renderPainel() {
+  const ativos = dados().filter(item => item.a.ativo);
+
+  const inadimplentes = ativos.filter(
+    item => item.s.estado === "late"
+  ).length;
+
+  const emDia = ativos.filter(
+    item => item.s.estado === "paid"
+  ).length;
+
+  const emAtraso = ativos.reduce(
+    (total, item) =>
+      total + item.s.atrasados.length * item.a.valor,
+    0
+  );
+
+  let recebido = 0;
+
+  alunos.forEach(aluno => {
+    const pagamento = (aluno.pagos || {})[mesAtual];
+
+    if (pagamento) {
+      recebido += +pagamento.valor || 0;
+    }
   });
 
-  if (name === "payments") fillPayment();
-}
+  const taxa = ativos.length
+    ? Math.round(inadimplentes / ativos.length * 100)
+    : 0;
 
-function resetStudentForm() {
-  editingId = null;
-  $("studentForm").reset();
-  $("studentStart").value = monthKey(today());
-  $("studentTitle").textContent = "Cadastrar aluno";
-  $("saveStudent").textContent = "Cadastrar aluno";
-  $("cancelEdit").hidden = true;
-}
-
-function paymentRecords() {
-  return students.flatMap(student =>
-    Object.entries(student.pagos || {}).map(([month, payment]) => ({
-      student,
-      month,
-      payment
-    }))
-  );
-}
-
-function renderDashboard() {
-  const active = students.filter(student => student.ativo);
-  const records = active.map(student => ({
-    student,
-    situation: status(student)
-  }));
-
-  const late = records.filter(item => item.situation.state === "late");
-  const paid = records.filter(item => item.situation.state === "paid");
-  const currentMonth = monthKey(today());
-
-  const received = paymentRecords()
-    .filter(item => (item.payment.data || "").slice(0, 7) === currentMonth)
-    .reduce((sum, item) => sum + Number(item.payment.valor || 0), 0);
-
-  const debt = late.reduce(
-    (sum, item) =>
-      sum + item.situation.overdue.length * Number(item.student.valor),
+  const previsto = ativos.reduce(
+    (total, item) => total + item.a.valor,
     0
   );
 
-  const expected = active.reduce(
-    (sum, student) => sum + Number(student.valor || 0),
-    0
-  );
-
-  const cards = [
-    [active.length, "Alunos ativos", ""],
-    [paid.length, "Em dia", "green"],
-    [late.length, "Inadimplentes", "red"],
-    [money(received), "Recebido neste mês", "green"],
-    [money(debt), "Mensalidades em atraso", "red"],
-    [money(expected), "Receita mensal prevista", ""]
-  ];
-
-  $("kpis").innerHTML = cards.map(([value, text, color]) => `
-    <div class="kpi">
-      <strong class="${color}">${value}</strong>
-      <span>${text}</span>
+  $("kpis").innerHTML = `
+    <div>
+      <b>${ativos.length}</b>
+      <span>alunos ativos</span>
     </div>
-  `).join("");
 
-  const months = [];
+    <div class="k-paid">
+      <b>${emDia}</b>
+      <span>em dia</span>
+    </div>
 
-  for (let index = 5; index >= 0; index--) {
-    const date = new Date(
-      today().getFullYear(),
-      today().getMonth() - index,
+    <div class="k-late">
+      <b>${inadimplentes}</b>
+      <span>inadimplentes (${taxa}%)</span>
+    </div>
+
+    <div class="k-paid">
+      <b>${brl(recebido)}</b>
+      <span>recebido em ${nomeMes(mesAtual)}</span>
+    </div>
+
+    <div class="k-late">
+      <b>${brl(emAtraso)}</b>
+      <span>em atraso</span>
+    </div>
+
+    <div>
+      <b>${brl(previsto)}</b>
+      <span>receita mensal prevista</span>
+    </div>
+  `;
+
+  const meses = [];
+
+  for (let i = 5; i >= 0; i--) {
+    const data = new Date(
+      hoje.getFullYear(),
+      hoje.getMonth() - i,
       1
     );
 
-    const key = monthKey(date);
-
-    const total = paymentRecords()
-      .filter(item => (item.payment.data || "").slice(0, 7) === key)
-      .reduce((sum, item) => sum + Number(item.payment.valor || 0), 0);
-
-    months.push({ date, total });
-  }
-
-  const maximum = Math.max(1, ...months.map(item => item.total));
-
-  $("chart").innerHTML = months.map(item => `
-    <div class="chart-row">
-      <span>${item.date.toLocaleDateString("pt-BR", { month: "short" })}</span>
-      <div class="track">
-        <div
-          class="bar"
-          style="width:${item.total / maximum * 100}%"
-        ></div>
-      </div>
-      <strong>${money(item.total)}</strong>
-    </div>
-  `).join("");
-
-  const upcoming = records.filter(item => {
-    if (item.situation.state !== "wait") return false;
-    return (
-      item.situation.pending.due - today()
-    ) / 86400000 <= 7;
-  }).sort((a, b) => a.situation.pending.due - b.situation.pending.due);
-
-  $("upcoming").innerHTML = upcoming.length
-    ? upcoming.map(({ student, situation }) => `
-      <div class="row wait">
-        <div>
-          <strong>${escapeHtml(student.nome)}</strong>
-          <div class="muted">
-            ${formatDate(dateKey(situation.pending.due))}
-          </div>
-        </div>
-        <strong>${money(student.valor)}</strong>
-      </div>
-    `).join("")
-    : empty("Nenhum vencimento nos próximos 7 dias.");
-}
-
-function renderStudents() {
-  const query = $("search").value.trim().toLocaleLowerCase("pt-BR");
-  const filter = $("statusFilter").value;
-
-  const visible = students.map(student => ({
-    student,
-    situation: status(student)
-  })).filter(({ student, situation }) =>
-    student.nome.toLocaleLowerCase("pt-BR").includes(query) &&
-    (filter === "all" || situation.state === filter)
-  ).sort((a, b) => a.student.nome.localeCompare(b.student.nome, "pt-BR"));
-
-  $("studentList").innerHTML = visible.length
-    ? visible.map(({ student, situation }) => `
-      <article class="row ${situation.state}">
-        <div>
-          <div class="name">${escapeHtml(student.nome)}</div>
-          <div>
-            <span class="tag">${labels[situation.state]}</span>
-            ${escapeHtml(student.plano)} · ${money(student.valor)}
-          </div>
-          <div class="muted">
-            Vencimento: dia ${Number(student.dia)}
-            ${student.tel ? " · " + escapeHtml(student.tel) : ""}
-          </div>
-          ${student.obs
-            ? `<div class="muted">${escapeHtml(student.obs)}</div>`
-            : ""}
-        </div>
-        <div class="actions">
-          <button class="secondary" data-edit="${escapeHtml(student.id)}">
-            Editar
-          </button>
-          <button class="secondary" data-toggle="${escapeHtml(student.id)}">
-            ${student.ativo ? "Inativar" : "Reativar"}
-          </button>
-          <button class="danger" data-delete="${escapeHtml(student.id)}">
-            Remover
-          </button>
-        </div>
-      </article>
-    `).join("")
-    : empty("Nenhum aluno encontrado.");
-}
-
-function renderPayments() {
-  const previous = $("paymentStudent").value;
-
-  $("paymentStudent").innerHTML =
-    '<option value="">Selecione um aluno</option>' +
-    students.filter(student => student.ativo)
-      .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"))
-      .map(student => `
-        <option value="${escapeHtml(student.id)}">
-          ${escapeHtml(student.nome)}
-        </option>
-      `).join("");
-
-  if (students.some(student => student.id === previous && student.ativo)) {
-    $("paymentStudent").value = previous;
-  }
-
-  const records = paymentRecords().sort((a, b) =>
-    (b.payment.data || "").localeCompare(a.payment.data || "")
-  );
-
-  $("paymentList").innerHTML = records.length
-    ? records.map(({ student, month, payment }) => `
-      <article class="row paid">
-        <div>
-          <div class="name">${escapeHtml(student.nome)}</div>
-          <div class="muted">
-            ${escapeHtml(monthLabel(month))} · ${money(payment.valor)}
-            <br>
-            ${escapeHtml(payment.metodo)} ·
-            ${escapeHtml(formatDate(payment.data))}
-          </div>
-        </div>
-        <button
-          class="danger"
-          data-undo="${escapeHtml(student.id)}"
-          data-month="${escapeHtml(month)}"
-        >Estornar</button>
-      </article>
-    `).join("")
-    : empty("Nenhum pagamento registrado.");
-}
-
-function fillPayment() {
-  const student = students.find(item =>
-    item.id === $("paymentStudent").value
-  );
-
-  $("paymentDate").value = dateKey(today());
-  $("paymentMonth").value = monthKey(today());
-  $("paymentValue").value = "";
-
-  if (!student) return;
-
-  const situation = status(student);
-
-  $("paymentMonth").value =
-    situation.overdue[0]?.month ||
-    situation.pending?.month ||
-    monthKey(today());
-
-  $("paymentValue").value = student.valor;
-}
-
-function renderOverdue() {
-  const late = students.map(student => ({
-    student,
-    situation: status(student)
-  })).filter(item => item.situation.state === "late")
-    .sort((a, b) => b.situation.days - a.situation.days);
-
-  $("overdueList").innerHTML = late.length
-    ? late.map(({ student, situation }) => {
-      let phone = String(student.tel || "").replace(/\D/g, "");
-
-      if (phone.length === 10 || phone.length === 11) {
-        phone = "55" + phone;
-      }
-
-      const total = situation.overdue.length * Number(student.valor);
-
-      const message =
-        `Olá, ${student.nome}! Há ${situation.overdue.length} ` +
-        `mensalidade(s) em aberto na Fitness Culture, ` +
-        `no total de ${money(total)}. Podemos ajudar a regularizar?`;
-
-      const link = phone
-        ? `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
-        : "";
-
-      return `
-        <article class="row late">
-          <div>
-            <div class="name">${escapeHtml(student.nome)}</div>
-            <span class="tag">${situation.days} dias de atraso</span>
-            <div class="muted">
-              ${situation.overdue.map(item =>
-                escapeHtml(monthLabel(item.month))
-              ).join(", ")}
-            </div>
-            <strong class="red">${money(total)}</strong>
-          </div>
-          <div class="actions">
-            ${link ? `
-              <a
-                class="button"
-                href="${escapeHtml(link)}"
-                target="_blank"
-                rel="noopener noreferrer"
-              >Cobrar no WhatsApp</a>
-            ` : ""}
-            <button data-pay="${escapeHtml(student.id)}">
-              Registrar pagamento
-            </button>
-          </div>
-        </article>
-      `;
-    }).join("")
-    : empty("Nenhum aluno inadimplente.");
-}
-
-function render() {
-  renderDashboard();
-  renderStudents();
-  renderPayments();
-  renderOverdue();
-}
-
-$("loginForm").addEventListener("submit", event => {
-  event.preventDefault();
-
-  const username = $("username").value.trim()
-    .replace(/\s+/g, " ")
-    .toLocaleLowerCase("pt-BR");
-
-  if (username !== USER.toLocaleLowerCase("pt-BR")) {
-    $("error").textContent = "Use o usuário Claudio Cantele.";
-    return;
-  }
-
-  if (!loadStudents()) return;
-
-  loggedIn = true;
-  $("error").textContent = "";
-  $("login").hidden = true;
-  $("app").hidden = false;
-
-  resetStudentForm();
-  fillPayment();
-  showTab("dashboard");
-  render();
-});
-
-$("logout").addEventListener("click", () => {
-  loggedIn = false;
-  students = [];
-  editingId = null;
-  $("app").hidden = true;
-  $("login").hidden = false;
-  $("username").value = USER;
-});
-
-document.querySelectorAll("[data-tab]").forEach(button => {
-  button.addEventListener("click", () => showTab(button.dataset.tab));
-});
-
-$("studentPlan").addEventListener("change", () => {
-  $("studentValue").value = prices[$("studentPlan").value];
-});
-
-$("cancelEdit").addEventListener("click", resetStudentForm);
-$("search").addEventListener("input", renderStudents);
-$("statusFilter").addEventListener("change", renderStudents);
-$("paymentStudent").addEventListener("change", fillPayment);
-
-$("studentForm").addEventListener("submit", event => {
-  event.preventDefault();
-  if (!loggedIn || !$("studentForm").reportValidity()) return;
-
-  const name = $("studentName").value.trim();
-
-  if (!name) {
-    alert("Informe o nome do aluno.");
-    return;
-  }
-
-  const fields = {
-    nome: name,
-    tel: $("studentPhone").value.trim(),
-    plano: $("studentPlan").value,
-    valor: Number($("studentValue").value),
-    dia: Number($("studentDay").value),
-    inicio: $("studentStart").value,
-    obs: $("studentNotes").value.trim()
-  };
-
-  let next;
-
-  if (editingId) {
-    next = students.map(student =>
-      student.id === editingId ? { ...student, ...fields } : student
-    );
-  } else {
-    const id = globalThis.crypto?.randomUUID
-      ? crypto.randomUUID()
-      : "a" + Date.now().toString(36) + Math.random().toString(36).slice(2);
-
-    next = [
-      ...students,
-      { id, ...fields, ativo: true, pagos: {} }
-    ];
-  }
-
-  if (saveStudents(next)) resetStudentForm();
-});
-
-$("paymentForm").addEventListener("submit", event => {
-  event.preventDefault();
-  if (!loggedIn || !$("paymentForm").reportValidity()) return;
-
-  const student = students.find(item =>
-    item.id === $("paymentStudent").value
-  );
-
-  if (!student) return;
-
-  const month = $("paymentMonth").value;
-
-  if (month < student.inicio) {
-    alert("O mês informado é anterior ao primeiro mês cobrado.");
-    return;
-  }
-
-  if ((student.pagos || {})[month]) {
-    if (!confirm("Já existe pagamento neste mês. Deseja substituí-lo?")) {
-      return;
-    }
-  }
-
-  const payment = {
-    valor: Number($("paymentValue").value),
-    data: $("paymentDate").value,
-    metodo: $("paymentMethod").value
-  };
-
-  const next = students.map(item =>
-    item.id === student.id
-      ? { ...item, pagos: { ...(item.pagos || {}), [month]: payment } }
-      : item
-  );
-
-  if (saveStudents(next)) {
-    fillPayment();
-    alert("Pagamento registrado.");
-  }
-});
-
-document.addEventListener("click", event => {
-  if (!loggedIn) return;
-
-  const button = event.target.closest("button");
-  if (!button) return;
-
-  const data = button.dataset;
-  const id = data.edit || data.toggle || data.delete || data.pay || data.undo;
-  if (!id) return;
-
-  const student = students.find(item => item.id === id);
-  if (!student) return;
-
-  if (data.edit) {
-    editingId = id;
-    showTab("students");
-
-    $("studentName").value = student.nome;
-    $("studentPhone").value = student.tel || "";
-    $("studentPlan").value = student.plano;
-    $("studentValue").value = student.valor;
-    $("studentDay").value = student.dia;
-    $("studentStart").value = student.inicio;
-    $("studentNotes").value = student.obs || "";
-    $("studentTitle").textContent = "Editar aluno";
-    $("saveStudent").textContent = "Salvar alterações";
-    $("cancelEdit").hidden = false;
-
-    $("studentForm").scrollIntoView({ behavior: "smooth" });
-    return;
-  }
-
-  if (data.toggle) {
-    const next = students.map(item =>
-      item.id === id ? { ...item, ativo: !item.ativo } : item
-    );
-    saveStudents(next);
-    return;
-  }
-
-  if (data.delete) {
-    if (confirm(`Remover ${student.nome} e todo o histórico de pagamentos?`)) {
-      if (saveStudents(students.filter(item => item.id !== id))) {
-        if (editingId === id) resetStudentForm();
-      }
-    }
-    return;
-  }
-
-  if (data.pay) {
-    showTab("payments");
-    $("paymentStudent").value = id;
-    fillPayment();
-    $("paymentForm").scrollIntoView({ behavior: "smooth" });
-    return;
-  }
-
-  if (data.undo) {
-    const month = data.month;
-
-    if (!confirm(
-      `Estornar o pagamento de ${monthLabel(month)} de ${student.nome}?`
-    )) return;
-
-    const payments = { ...(student.pagos || {}) };
-    delete payments[month];
-
-    saveStudents(students.map(item =>
-      item.id === id ? { ...item, pagos: payments } : item
+    meses.push(key(
+      data.getFullYear(),
+      data.getMonth()
     ));
   }
+
+  const totais = meses.map(referencia =>
+    alunos.reduce(
+      (total, aluno) => {
+        const pagamento = (aluno.pagos || {})[referencia];
+        return total + (pagamento ? +pagamento.valor || 0 : 0);
+      },
+      0
+    )
+  );
+
+  const maximo = Math.max(1, ...totais);
+  let svg = "";
+
+  meses.forEach((referencia, indice) => {
+    const altura = Math.round(totais[indice] / maximo * 120);
+    const x = 14 + indice * 66;
+
+    const classe = referencia === mesAtual ? "cur" : "";
+
+    const mes = MESES[
+      Number(referencia.split("-")[1]) - 1
+    ].slice(0, 3);
+
+    svg += `
+      <rect
+        class="${classe}"
+        x="${x}"
+        y="${140 - altura}"
+        width="46"
+        height="${altura}"
+        rx="3"
+      />
+
+      <text
+        x="${x + 23}"
+        y="${132 - altura}"
+        text-anchor="middle"
+      >${totais[indice] ? Math.round(totais[indice]) : ""}</text>
+
+      <text
+        x="${x + 23}"
+        y="160"
+        text-anchor="middle"
+      >${mes}</text>
+    `;
+  });
+
+  $("chart").innerHTML = svg;
+
+  const proximos = ativos
+    .filter(item =>
+      item.s.estado === "wait" &&
+      Math.round(
+        (item.s.pend.venc - hoje) / 86400000
+      ) <= 7
+    )
+    .sort((a, b) => a.s.pend.venc - b.s.pend.venc);
+
+  $("ups").innerHTML = proximos.length
+    ? proximos.map(item => `
+        <div class="up">
+          <span>${esc(item.a.nome)}</span>
+          <span>
+            dia ${item.a.dia} · ${brl(item.a.valor)}
+          </span>
+        </div>
+      `).join("")
+    : `
+      <div class="meta">
+        Nenhum vencimento nos próximos 7 dias.
+      </div>
+    `;
+}
+
+/* =========================================================
+   LISTAGEM DOS ALUNOS
+   ========================================================= */
+
+function linhaAluno(aluno, status) {
+  let detalhe;
+
+  if (status.estado === "late") {
+    detalhe =
+      status.atrasados.length +
+      (status.atrasados.length > 1 ? " meses" : " mês") +
+      " em atraso · " +
+      status.dias +
+      " dias · " +
+      brl(status.atrasados.length * aluno.valor);
+  } else if (status.estado === "off") {
+    detalhe = "Cadastro inativo";
+  } else {
+    detalhe = "Vence dia " + aluno.dia;
+  }
+
+  return `
+    <div class="row ${status.estado}">
+      <div>
+        <div class="name">${esc(aluno.nome)}</div>
+
+        <div class="meta">
+          CPF: ${esc(aluno.cpf || "Não informado")}
+        </div>
+
+        <div class="meta">
+          <span class="tag">${rotulo[status.estado]}</span>
+
+          ${esc(aluno.plano)} ·
+          ${brl(aluno.valor)} ·
+          desde ${nomeMes(aluno.inicio)} ·
+          ${detalhe}
+
+          ${aluno.tel ? " · " + esc(aluno.tel) : ""}
+          ${aluno.obs ? "<br>" + esc(aluno.obs) : ""}
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="ghost" data-edit="${esc(aluno.id)}">
+          Editar
+        </button>
+
+        <button class="ghost" data-toggle="${esc(aluno.id)}">
+          ${aluno.ativo ? "Inativar" : "Reativar"}
+        </button>
+
+        <button class="danger" data-del="${esc(aluno.id)}">
+          Remover
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function renderAlunos() {
+  const busca = $("q").value.trim().toLowerCase();
+  const filtro = $("fs").value;
+
+  const visiveis = dados()
+    .filter(item =>
+      (filtro === "todos" || item.s.estado === filtro) &&
+      item.a.nome.toLowerCase().includes(busca)
+    )
+    .sort((a, b) =>
+      a.a.nome.localeCompare(b.a.nome, "pt-BR")
+    );
+
+  $("la").innerHTML = visiveis.length
+    ? visiveis
+      .map(item => linhaAluno(item.a, item.s))
+      .join("")
+    : `
+      <div class="empty">
+        ${
+          alunos.length
+            ? "Nenhum aluno com esse filtro."
+            : "Cadastre o primeiro aluno no formulário acima."
+        }
+      </div>
+    `;
+}
+
+/* =========================================================
+   PAGAMENTOS
+   ========================================================= */
+
+function renderPag() {
+  const select = $("p-aluno");
+  const selecionado = select.value;
+
+  select.innerHTML = alunos
+    .filter(aluno => aluno.ativo)
+    .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"))
+    .map(aluno => `
+      <option value="${esc(aluno.id)}">
+        ${esc(aluno.nome)}
+      </option>
+    `)
+    .join("");
+
+  if (selecionado) {
+    select.value = selecionado;
+  }
+
+  const todos = [];
+
+  alunos.forEach(aluno => {
+    Object.keys(aluno.pagos || {}).forEach(referencia => {
+      todos.push({
+        a: aluno,
+        k: referencia,
+        p: aluno.pagos[referencia]
+      });
+    });
+  });
+
+  todos.sort((a, b) =>
+    (b.p.data || "").localeCompare(a.p.data || "")
+  );
+
+  $("lp").innerHTML = todos.length
+    ? todos.slice(0, 30).map(item => `
+      <div class="row paid">
+        <div>
+          <div class="name">${esc(item.a.nome)}</div>
+
+          <div class="meta">
+            <span class="tag">Aprovado</span>
+            ${nomeMes(item.k)} ·
+            ${brl(item.p.valor)} ·
+            ${esc(item.p.metodo)} ·
+            pago em ${fdata(item.p.data)}
+          </div>
+        </div>
+
+        <div class="actions">
+          <button
+            class="danger"
+            data-undo="${esc(item.a.id)}|${item.k}"
+          >
+            Estornar
+          </button>
+        </div>
+      </div>
+    `).join("")
+    : `
+      <div class="empty">
+        Nenhum pagamento aprovado ainda.
+      </div>
+    `;
+}
+
+function fillPagForm() {
+  const aluno = alunos.find(
+    item => item.id === $("p-aluno").value
+  );
+
+  if (!aluno) return;
+
+  const status = situacao(aluno);
+
+  $("p-mes").value = status.proximo || mesAtual;
+  $("p-valor").value = aluno.valor;
+  $("p-data").value = iso(hoje);
+}
+
+/* =========================================================
+   INADIMPLÊNCIA E COBRANÇA PELO WHATSAPP
+   ========================================================= */
+
+function foneLink(aluno, status) {
+  let telefone = (aluno.tel || "").replace(/\D/g, "");
+
+  if (!telefone) return "";
+
+  if (telefone.length <= 11) {
+    telefone = "55" + telefone;
+  }
+
+  const meses = status.atrasados
+    .map(item => nomeMes(item.k))
+    .join(", ");
+
+  const mensagem =
+    "Olá, " + aluno.nome.split(" ")[0] + "! Identificamos " +
+    status.atrasados.length +
+    (
+      status.atrasados.length > 1
+        ? " mensalidades"
+        : " mensalidade"
+    ) +
+    " em aberto na academia (" + meses + "), total de " +
+    brl(status.atrasados.length * aluno.valor) +
+    ". Podemos ajudar a regularizar?";
+
+  return "https://wa.me/" + telefone +
+    "?text=" + encodeURIComponent(mensagem);
+}
+
+function renderInad() {
+  const lista = dados()
+    .filter(item => item.s.estado === "late")
+    .sort((a, b) => b.s.dias - a.s.dias);
+
+  $("li").innerHTML = lista.length
+    ? lista.map(({ a: aluno, s: status }) => {
+      const link = foneLink(aluno, status);
+
+      return `
+        <div class="row late">
+          <div>
+            <div class="name">${esc(aluno.nome)}</div>
+
+            <div class="meta">
+              CPF: ${esc(aluno.cpf || "Não informado")}
+            </div>
+
+            <div class="meta">
+              <span class="tag">
+                ${status.dias} dias de atraso
+              </span>
+
+              ${
+                status.atrasados
+                  .map(item => nomeMes(item.k))
+                  .join(", ")
+              }
+
+              · ${brl(status.atrasados.length * aluno.valor)}
+            </div>
+          </div>
+
+          <div class="actions">
+            ${
+              link
+                ? `
+                  <a
+                    class="btn ghost"
+                    target="_blank"
+                    rel="noopener"
+                    href="${link}"
+                  >
+                    Cobrar no WhatsApp
+                  </a>
+                `
+                : `
+                  <span class="meta">
+                    Sem WhatsApp cadastrado
+                  </span>
+                `
+            }
+
+            <button data-pay="${esc(aluno.id)}">
+              Aprovar ${nomeMes(status.proximo)}
+            </button>
+          </div>
+        </div>
+      `;
+    }).join("")
+    : `
+      <div class="empty">
+        Nenhum aluno inadimplente.
+        Todos os alunos ativos estão em dia.
+      </div>
+    `;
+}
+
+/* =========================================================
+   ATUALIZAÇÃO DA INTERFACE E NAVEGAÇÃO
+   ========================================================= */
+
+function render() {
+  if (perfilCadastro) {
+    $("la").innerHTML = "";
+    return;
+  }
+
+  renderPainel();
+  renderAlunos();
+  renderPag();
+  renderInad();
+  renderPendentes();
+}
+
+function aba_(destino) {
+  if (perfilCadastro && destino !== "alunos") {
+    return;
+  }
+
+  aba = destino;
+
+  ["painel", "alunos", "pag", "inad", "adm"]
+    .forEach(nome => {
+      $("t-" + nome).hidden = nome !== destino;
+    });
+
+  document.querySelectorAll("#nav button")
+    .forEach(botao => {
+      botao.setAttribute(
+        "aria-pressed",
+        botao.dataset.t === destino
+      );
+    });
+}
+
+function limparForm() {
+  preCadastroId = null;
+  editId = null;
+
+  $("fa").reset();
+
+  $("a-dia").value = 10;
+  $("a-ini").value = mesAtual;
+  $("a-plano").value = PLANOS[0].n;
+  $("a-valor").value = PLANOS[0].v;
+
+  $("a-save").textContent = "Cadastrar aluno";
+  $("a-cancel").hidden = true;
+}
+
+function formatarCpf(valor) {
+  return valor
+    .replace(/\D/g, "")
+    .slice(0, 11)
+    .replace(/^(\d{3})(\d)/, "$1.$2")
+    .replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3")
+    .replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4");
+}
+
+/* =========================================================
+   GRAVAÇÃO DOS DADOS
+   ========================================================= */
+
+async function gravar(id, registro) {
+  try {
+    await db.collection("alunos").doc(id).set(registro);
+    return true;
+  } catch (erro) {
+    alert(
+      "Não foi possível salvar: " +
+      (erro && erro.message || "erro de conexão")
+    );
+
+    return false;
+  }
+}
+
+async function atualizar(id, alteracoes) {
+  if (perfilCadastro) return;
+
+  try {
+    await db.collection("alunos").doc(id).update(alteracoes);
+  } catch (erro) {
+    alert(
+      "Não foi possível salvar: " +
+      (erro && erro.message || "erro de conexão")
+    );
+  }
+}
+
+/* =========================================================
+   FORMULÁRIO ADMINISTRATIVO DE ALUNOS
+   ========================================================= */
+
+$("a-cpf").addEventListener("input", evento => {
+  evento.target.value = formatarCpf(evento.target.value);
 });
 
-$("exportCsv").addEventListener("click", () => {
-  if (!loggedIn) return;
+$("a-plano").innerHTML = PLANOS
+  .map(plano => `<option>${plano.n}</option>`)
+  .join("");
 
-  const rows = [
-    ["Nome", "WhatsApp", "Meses em atraso", "Dias de atraso", "Valor em atraso"]
-  ];
+$("a-plano").addEventListener("change", () => {
+  const plano = PLANOS.find(
+    item => item.n === $("a-plano").value
+  );
 
-  for (const student of students) {
-    const situation = status(student);
-    if (situation.state !== "late") continue;
+  if (plano) {
+    $("a-valor").value = plano.v;
+  }
+});
 
-    rows.push([
-      student.nome,
-      student.tel || "",
-      situation.overdue.map(item => item.month).join(", "),
-      situation.days,
-      (situation.overdue.length * Number(student.valor)).toFixed(2)
-    ]);
+$("fa").addEventListener("submit", async evento => {
+  evento.preventDefault();
+
+  const registro = {
+    nome: $("a-nome").value.trim(),
+    cpf: $("a-cpf").value.trim(),
+    tel: $("a-tel").value.trim(),
+    plano: $("a-plano").value,
+    valor: parseFloat($("a-valor").value),
+    dia: parseInt($("a-dia").value, 10),
+    inicio: $("a-ini").value,
+    obs: $("a-obs").value.trim()
+  };
+
+  if (!registro.nome) return;
+
+  const origem = preCadastroId;
+
+  $("a-save").disabled = true;
+
+  try {
+    if (editId) {
+      await atualizar(editId, registro);
+    } else {
+      const id = origem
+        ? "pre-" + origem
+        : "a" + crypto.randomUUID();
+
+      const sucesso = await gravar(
+        id,
+        Object.assign(registro, {
+          ativo: true,
+          pagos: {}
+        })
+      );
+
+      if (!sucesso) return;
+
+      if (origem) {
+        try {
+          const restantes = lerPrecadastros()
+            .filter(item => item.id !== origem);
+
+          localStorage.setItem(
+            PRECADASTROS_KEY,
+            JSON.stringify(restantes)
+          );
+
+          renderPendentes();
+        } catch (erro) {
+          alert(
+            "Aluno salvo. Não foi possível retirar " +
+            "o pré-cadastro da lista."
+          );
+        }
+      }
+    }
+
+    limparForm();
+  } finally {
+    $("a-save").disabled = false;
+  }
+});
+
+$("a-cancel").addEventListener("click", limparForm);
+
+$("q").addEventListener("input", renderAlunos);
+$("fs").addEventListener("change", renderAlunos);
+
+$("p-aluno").addEventListener("change", fillPagForm);
+
+/* =========================================================
+   REGISTRO DE PAGAMENTO
+   ========================================================= */
+
+$("fp").addEventListener("submit", evento => {
+  evento.preventDefault();
+
+  if (perfilCadastro) return;
+
+  const aluno = alunos.find(
+    item => item.id === $("p-aluno").value
+  );
+
+  if (!aluno) return;
+
+  const pagos = Object.assign({}, aluno.pagos || {});
+
+  pagos[$("p-mes").value] = {
+    data: $("p-data").value,
+    metodo: $("p-met").value,
+    valor: parseFloat($("p-valor").value)
+  };
+
+  atualizar(aluno.id, { pagos });
+});
+
+/* =========================================================
+   BOTÕES DAS LISTAGENS
+   ========================================================= */
+
+document.addEventListener("click", evento => {
+  const botao = evento.target.closest("button");
+
+  if (!botao) return;
+
+  if (
+    perfilCadastro &&
+    (
+      botao.dataset.edit ||
+      botao.dataset.toggle ||
+      botao.dataset.del ||
+      botao.dataset.pay ||
+      botao.dataset.undo
+    )
+  ) {
+    return;
   }
 
-  function csvCell(value) {
-    let text = String(value);
+  const atributo = nome => botao.dataset[nome];
 
-    // Evita interpretar textos como fórmulas ao abrir em uma planilha.
-    if (/^[\s]*[=+\-@]/.test(text)) text = "'" + text;
+  if (atributo("t")) {
+    aba_(atributo("t"));
 
-    return '"' + text.replace(/"/g, '""') + '"';
+    if (atributo("t") === "pag") {
+      fillPagForm();
+    }
+
+    return;
   }
 
-  const csv = "\uFEFF" +
-    rows.map(row => row.map(csvCell).join(";")).join("\r\n");
+  if (atributo("edit")) {
+    const aluno = alunos.find(
+      item => item.id === atributo("edit")
+    );
 
-  const url = URL.createObjectURL(new Blob([csv], {
-    type: "text/csv;charset=utf-8"
-  }));
+    if (!aluno) return;
 
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = "inadimplentes-" + dateKey(today()) + ".csv";
+    editId = aluno.id;
 
-  document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
+    $("a-nome").value = aluno.nome;
+    $("a-cpf").value = aluno.cpf || "";
+    $("a-tel").value = aluno.tel || "";
+    $("a-plano").value = aluno.plano;
+    $("a-valor").value = aluno.valor;
+    $("a-dia").value = aluno.dia;
+    $("a-ini").value = aluno.inicio;
+    $("a-obs").value = aluno.obs || "";
+
+    $("a-save").textContent = "Salvar alterações";
+    $("a-cancel").hidden = false;
+
+    $("fa").scrollIntoView({ behavior: "smooth" });
+    return;
+  }
+
+  if (atributo("toggle")) {
+    const aluno = alunos.find(
+      item => item.id === atributo("toggle")
+    );
+
+    if (aluno) {
+      atualizar(aluno.id, {
+        ativo: !aluno.ativo
+      });
+    }
+
+    return;
+  }
+
+  if (atributo("del")) {
+    const aluno = alunos.find(
+      item => item.id === atributo("del")
+    );
+
+    if (
+      aluno &&
+      confirm(
+        "Remover " + aluno.nome +
+        " e todo o histórico de pagamentos?"
+      )
+    ) {
+      db.collection("alunos")
+        .doc(aluno.id)
+        .delete()
+        .catch(() => alert("Não foi possível remover."));
+    }
+
+    return;
+  }
+
+  if (atributo("pay")) {
+    const aluno = alunos.find(
+      item => item.id === atributo("pay")
+    );
+
+    const status = aluno && situacao(aluno);
+
+    if (!status || !status.proximo) return;
+
+    const pagos = Object.assign({}, aluno.pagos || {});
+
+    pagos[status.proximo] = {
+      data: iso(hoje),
+      metodo: "Pix",
+      valor: aluno.valor
+    };
+
+    atualizar(aluno.id, { pagos });
+    return;
+  }
+
+  if (atributo("undo")) {
+    const partes = atributo("undo").split("|");
+
+    const aluno = alunos.find(
+      item => item.id === partes[0]
+    );
+
+    if (
+      aluno &&
+      confirm(
+        "Estornar o pagamento de " +
+        nomeMes(partes[1]) +
+        " de " + aluno.nome + "?"
+      )
+    ) {
+      const pagos = Object.assign({}, aluno.pagos || {});
+
+      delete pagos[partes[1]];
+
+      atualizar(aluno.id, { pagos });
+    }
+  }
+});
+
+/* =========================================================
+   EXPORTAÇÃO CSV DOS INADIMPLENTES
+   ========================================================= */
+
+$("csv").addEventListener("click", () => {
+  if (perfilCadastro) return;
+
+  const lista = dados().filter(
+    item => item.s.estado === "late"
+  );
+
+  const linhas = [[
+    "Nome",
+    "WhatsApp",
+    "Meses em atraso",
+    "Dias de atraso",
+    "Valor em atraso"
+  ]].concat(
+    lista.map(({ a: aluno, s: status }) => [
+      aluno.nome,
+      aluno.tel || "",
+      status.atrasados.map(item => item.k).join(" "),
+      status.dias,
+      (status.atrasados.length * aluno.valor).toFixed(2)
+    ])
+  );
+
+  const csv = "\ufeff" + linhas
+    .map(linha =>
+      linha.map(celula =>
+        '"' + String(celula).replace(/"/g, '""') + '"'
+      ).join(";")
+    )
+    .join("\r\n");
+
+  const url = URL.createObjectURL(
+    new Blob([csv], {
+      type: "text/csv;charset=utf-8"
+    })
+  );
+
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "inadimplentes-" + iso(hoje) + ".csv";
+  link.click();
 
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
+
+/* =========================================================
+   SENHAS LOCAIS
+   ========================================================= */
+
+const hex = buffer =>
+  [...new Uint8Array(buffer)]
+    .map(numero => numero.toString(16).padStart(2, "0"))
+    .join("");
+
+const idDe = usuario => usuario.toLowerCase();
+
+const userOk = usuario => usuario === USUARIO_UNICO;
+
+const USER_MSG =
+  "O único administrador permitido é Claudio Cantele.";
+
+async function hash(salt, usuario, senha) {
+  const texto =
+    salt + ":" + usuario.toLowerCase() + ":" + senha;
+
+  const resultado = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(texto)
+  );
+
+  return hex(resultado);
+}
+
+async function criarAdmin(usuario, senha) {
+  const salt = hex(
+    crypto.getRandomValues(new Uint8Array(16))
+  );
+
+  const senhaHash = await hash(salt, usuario, senha);
+  const id = idDe(usuario);
+
+  try {
+    await db.doc("admins/" + id).set({
+      usuario,
+      salt,
+      hash: senhaHash
+    });
+  } catch (erro) {
+    return null;
+  }
+
+  return {
+    id,
+    usuario,
+    salt,
+    hash: senhaHash
+  };
+}
+
+/* =========================================================
+   BANCO LOCAL E ENTRADA NO APLICATIVO
+   ========================================================= */
+
+function trancar(mensagem, mostrarRetry) {
+  document.body.classList.add("login-screen");
+  document.documentElement.dataset.theme = "dark";
+
+  $("app").hidden = true;
+  $("gate").hidden = false;
+
+  $("gateMsg").textContent = mensagem;
+  $("retry").hidden = !mostrarRetry;
+}
+
+async function entrar() {
+  document.body.classList.add("login-screen");
+  document.documentElement.dataset.theme = "dark";
+
+  $("app").hidden = true;
+  $("gate").hidden = false;
+
+  const storageKey = "fitness-culture-demo-v1";
+  const adminKey = "fitness-culture-admin-v1";
+
+  let registros = [];
+  let contas = [];
+
+  try {
+    registros = JSON.parse(
+      localStorage.getItem(storageKey) || "[]"
+    );
+
+    contas = JSON.parse(
+      localStorage.getItem(adminKey) || "[]"
+    );
+
+    if (!Array.isArray(registros)) registros = [];
+    if (!Array.isArray(contas)) contas = [];
+  } catch (erro) {
+    // Mantém listas vazias se não houver dados válidos.
+  }
+
+  const salvar = () => {
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify(registros)
+    );
+
+    alunos = registros.map(aluno => ({ ...aluno }));
+    render();
+  };
+
+  const adminDoc = id => ({
+    set: async registro => {
+      const permitidos = [
+        USUARIO_UNICO,
+        "Mauricio",
+        "Taisla"
+      ];
+
+      if (
+        !permitidos.includes(registro.usuario) ||
+        id !== idDe(registro.usuario)
+      ) {
+        throw new Error("Usuário não permitido");
+      }
+
+      if (contas.some(conta => conta.id === id && conta.hash)) {
+        throw new Error("Esse perfil já possui senha");
+      }
+
+      const novasContas = contas
+        .filter(conta => conta.id !== id)
+        .concat([{ ...registro, id }]);
+
+      localStorage.setItem(
+        adminKey,
+        JSON.stringify(novasContas)
+      );
+
+      contas = novasContas;
+      adminsList = novasContas;
+
+      renderAdm();
+    },
+
+    update: async alteracoes => {
+      if (perfilCadastro) {
+        throw new Error("Acesso restrito");
+      }
+
+      const novasContas = contas.map(conta =>
+        conta.id === id
+          ? { ...conta, ...alteracoes }
+          : conta
+      );
+
+      localStorage.setItem(
+        adminKey,
+        JSON.stringify(novasContas)
+      );
+
+      contas = novasContas;
+      adminsList = novasContas;
+
+      renderAdm();
+    }
+  });
+
+  db = {
+    doc: caminho => {
+      if (caminho.startsWith("admins/")) {
+        return adminDoc(caminho.slice(7));
+      }
+
+      return {
+        get: async () => ({ exists: false })
+      };
+    },
+
+    collection: nome => {
+      if (nome === "admins") {
+        return {
+          get: async () => ({
+            docs: contas.map(conta => ({
+              id: conta.id,
+              data: () => conta
+            }))
+          })
+        };
+      }
+
+      if (nome !== "alunos") {
+        throw new Error("Coleção indisponível");
+      }
+
+      return {
+        doc: id => ({
+          set: async registro => {
+            if (
+              perfilCadastro &&
+              (
+                registros.some(aluno => aluno.id === id) ||
+                registro.ativo !== true ||
+                Object.keys(registro.pagos || {}).length
+              )
+            ) {
+              throw new Error("Apenas novos cadastros");
+            }
+
+            const anteriores = registros;
+
+            registros = registros
+              .filter(aluno => aluno.id !== id)
+              .concat([{ ...registro, id }]);
+
+            try {
+              salvar();
+            } catch (erro) {
+              registros = anteriores;
+              throw erro;
+            }
+          },
+
+          update: async alteracoes => {
+            if (perfilCadastro) {
+              throw new Error("Acesso restrito");
+            }
+
+            const anteriores = registros;
+
+            registros = registros.map(aluno =>
+              aluno.id === id
+                ? { ...aluno, ...alteracoes }
+                : aluno
+            );
+
+            try {
+              salvar();
+            } catch (erro) {
+              registros = anteriores;
+              throw erro;
+            }
+          },
+
+          delete: async () => {
+            if (perfilCadastro) {
+              throw new Error("Acesso restrito");
+            }
+
+            const anteriores = registros;
+
+            registros = registros.filter(
+              aluno => aluno.id !== id
+            );
+
+            try {
+              salvar();
+            } catch (erro) {
+              registros = anteriores;
+              throw erro;
+            }
+          }
+        })
+      };
+    }
+  };
+
+  adminsList = contas;
+
+  if (!(await autenticar())) return;
+
+  alunos = registros;
+  adminsList = contas;
+
+  document.body.classList.remove("login-screen");
+  document.documentElement.dataset.theme = "light";
+
+  $("gate").hidden = true;
+  $("app").hidden = false;
+
+  $("who").textContent =
+    adminUser + " · " +
+    (
+      perfilCadastro
+        ? "Somente cadastro de alunos"
+        : "Administrador"
+    ) +
+    " · Dados locais neste navegador";
+
+  $("sair").hidden = false;
+
+  document.querySelectorAll("#nav button")
+    .forEach(botao => {
+      botao.hidden =
+        perfilCadastro && botao.dataset.t !== "alunos";
+    });
+
+  $("csv").hidden = perfilCadastro;
+
+  $("f-addadm").parentElement.hidden = true;
+  $("f-pass").hidden = perfilCadastro;
+
+  $("student-pending").hidden = perfilCadastro;
+
+  document.querySelector("#t-alunos .bar").hidden =
+    perfilCadastro;
+
+  $("la").hidden = perfilCadastro;
+  $("loadnote").hidden = true;
+
+  limparForm();
+
+  $("p-data").value = iso(hoje);
+  $("p-mes").value = mesAtual;
+
+  aba_(perfilCadastro ? "alunos" : "painel");
+
+  render();
+  renderAdm();
+}
+
+/* =========================================================
+   LOGIN DOS FUNCIONÁRIOS
+   ========================================================= */
+
+function autenticar() {
+  return new Promise(resolve => {
+    const formulario = $("lf");
+    const usuario = $("l-user");
+    const senha = $("l-pass");
+    const confirmacao = $("l-pass2");
+
+    usuario.value = USUARIO_UNICO;
+    senha.value = "";
+    confirmacao.value = "";
+
+    const ajustar = () => {
+      const dono = usuario.value === USUARIO_UNICO;
+
+      const novo = !adminsList.some(conta =>
+        conta.id === idDe(usuario.value) && conta.hash
+      );
+
+      senha.hidden = false;
+      senha.disabled = false;
+      senha.required = true;
+
+      document.querySelector(
+        'label[for="l-pass"]'
+      ).hidden = false;
+
+      $("l-conf").hidden = !novo;
+
+      confirmacao.disabled = !novo;
+      confirmacao.required = novo;
+
+      senha.autocomplete = novo
+        ? "new-password"
+        : "current-password";
+
+      $("gateMsg").textContent =
+        usuario.value + ": " +
+        (
+          novo
+            ? "crie sua senha (mínimo 6 caracteres)."
+            : "informe sua senha."
+        ) +
+        (
+          dono
+            ? " Acesso de administrador."
+            : " Acesso apenas para cadastrar alunos."
+        );
+
+      $("lfBtn").textContent = novo
+        ? "Criar senha e entrar"
+        : "Entrar";
+
+      $("lfErr").textContent = "";
+    };
+
+    usuario.onchange = () => {
+      senha.value = "";
+      confirmacao.value = "";
+      ajustar();
+    };
+
+    ajustar();
+
+    $("gate").hidden = false;
+    $("app").hidden = true;
+    formulario.hidden = true;
+
+    const escolher = tipo => {
+      const voltar = $("access-back");
+
+      if (tipo === "staff") {
+        formulario.after(voltar);
+      } else if (tipo === "student") {
+        $("student-area").after(voltar);
+      }
+
+      $("access-options").hidden = tipo !== "inicio";
+      formulario.hidden = tipo !== "staff";
+      $("student-area").hidden = tipo !== "student";
+      $("access-back").hidden = tipo === "inicio";
+
+      if (tipo === "student") {
+        abaAluno("signup");
+      }
+
+      senha.value = "";
+      confirmacao.value = "";
+
+      $("lfErr").textContent = "";
+      $("student-feedback").textContent = "";
+
+      if (tipo === "staff") {
+        ajustar();
+      } else {
+        $("gateMsg").textContent = tipo === "student"
+          ? "Preencha seus dados para enviar o cadastro à academia."
+          : "Escolha como deseja acessar.";
+      }
+    };
+
+    $("access-staff").onclick = () => escolher("staff");
+    $("access-student").onclick = () => escolher("student");
+    $("access-back").onclick = () => escolher("inicio");
+
+    escolher("inicio");
+
+    formulario.onsubmit = async evento => {
+      evento.preventDefault();
+
+      $("lfBtn").disabled = true;
+
+      try {
+        const permitidos = [
+          USUARIO_UNICO,
+          "Mauricio",
+          "Taisla"
+        ];
+
+        if (!permitidos.includes(usuario.value)) {
+          throw new Error("Perfil inválido.");
+        }
+
+        perfilCadastro = usuario.value !== USUARIO_UNICO;
+
+        let conta = adminsList.find(item =>
+          item.id === idDe(usuario.value) && item.hash
+        );
+
+        if (!conta) {
+          if (senha.value.length < 6) {
+            throw new Error("Use pelo menos 6 caracteres.");
+          }
+
+          if (senha.value !== confirmacao.value) {
+            throw new Error("As senhas não conferem.");
+          }
+
+          conta = await criarAdmin(
+            usuario.value,
+            senha.value
+          );
+
+          if (!conta) {
+            throw new Error("Não foi possível salvar a senha.");
+          }
+        } else {
+          const tentativa = await hash(
+            conta.salt,
+            conta.usuario,
+            senha.value
+          );
+
+          if (tentativa !== conta.hash) {
+            throw new Error("Senha incorreta.");
+          }
+        }
+
+        adminHash = conta.hash;
+        adminUser = usuario.value;
+
+        senha.value = "";
+        confirmacao.value = "";
+
+        formulario.hidden = true;
+        resolve(true);
+      } catch (erro) {
+        perfilCadastro = false;
+
+        $("lfErr").textContent =
+          erro.message || "Não foi possível entrar.";
+      } finally {
+        $("lfBtn").disabled = false;
+      }
+    };
+  });
+}
+
+/* =========================================================
+   ADMINISTRAÇÃO DOS PERFIS
+   ========================================================= */
+
+function renderAdm() {
+  const meuId = idDe(adminUser);
+
+  $("adm-list").innerHTML = adminsList.length
+    ? adminsList
+      .slice()
+      .sort((a, b) => a.usuario.localeCompare(b.usuario))
+      .map(conta => `
+        <div class="row">
+          <div>
+            <div class="name">${esc(conta.usuario)}</div>
+
+            <div class="meta">
+              ${
+                conta.id === meuId
+                  ? '<span class="tag">Você</span>'
+                  : ""
+              }
+
+              ${
+                conta.usuario === USUARIO_UNICO
+                  ? "Administrador"
+                  : "Somente cadastro de alunos"
+              }
+            </div>
+          </div>
+
+          <div class="actions">
+            ${
+              conta.id === meuId
+                ? ""
+                : `
+                  <button
+                    class="danger"
+                    data-rmadm="${esc(conta.id)}"
+                  >
+                    Remover
+                  </button>
+                `
+            }
+          </div>
+        </div>
+      `).join("")
+    : `
+      <div class="empty">
+        Carregando administradores…
+      </div>
+    `;
+}
+
+$("f-pass").addEventListener("submit", async evento => {
+  evento.preventDefault();
+
+  const mensagem = $("m-pass");
+
+  const conta = adminsList.find(
+    item => item.id === idDe(adminUser)
+  );
+
+  if (!conta) {
+    mensagem.textContent =
+      "Aguarde os dados carregarem e tente de novo.";
+    return;
+  }
+
+  const atualHash = await hash(
+    conta.salt,
+    conta.usuario,
+    $("s-atual").value
+  );
+
+  if (atualHash !== conta.hash) {
+    mensagem.textContent = "Senha atual incorreta.";
+    return;
+  }
+
+  const novaSenha = $("s-nova").value;
+
+  if (novaSenha.length < 6) {
+    mensagem.textContent =
+      "A nova senha precisa ter pelo menos 6 caracteres.";
+    return;
+  }
+
+  if (novaSenha !== $("s-nova2").value) {
+    mensagem.textContent = "As senhas novas não conferem.";
+    return;
+  }
+
+  const salt = hex(
+    crypto.getRandomValues(new Uint8Array(16))
+  );
+
+  const novoHash = await hash(
+    salt,
+    conta.usuario,
+    novaSenha
+  );
+
+  try {
+    await db.doc("admins/" + conta.id).update({
+      salt,
+      hash: novoHash
+    });
+  } catch (erro) {
+    mensagem.textContent =
+      "Não foi possível salvar a senha. Tente de novo.";
+    return;
+  }
+
+  adminHash = novoHash;
+
+  try {
+    sessionStorage.setItem(
+      "adm",
+      conta.id + "|" + novoHash
+    );
+  } catch (erro) {}
+
+  evento.target.reset();
+  mensagem.textContent = "Senha alterada.";
+});
+
+$("f-addadm").addEventListener("submit", async evento => {
+  evento.preventDefault();
+
+  const mensagem = $("m-add");
+  const usuario = $("n-user").value.trim();
+  const senha = $("n-pass").value;
+
+  if (!userOk(usuario)) {
+    mensagem.textContent = USER_MSG;
+    return;
+  }
+
+  if (senha.length < 6) {
+    mensagem.textContent =
+      "A senha precisa ter pelo menos 6 caracteres.";
+    return;
+  }
+
+  if (
+    adminsList.some(conta =>
+      conta.id === idDe(usuario)
+    )
+  ) {
+    mensagem.textContent = "Esse usuário já existe.";
+    return;
+  }
+
+  const conta = await criarAdmin(usuario, senha);
+
+  if (conta) {
+    evento.target.reset();
+    mensagem.textContent =
+      "Administrador " + usuario + " adicionado.";
+  } else {
+    mensagem.textContent =
+      "Não foi possível adicionar. Tente de novo.";
+  }
+});
+
+document.addEventListener("click", evento => {
+  const botao = evento.target.closest("[data-rmadm]");
+
+  if (!botao) return;
+
+  if (botao.dataset.ok !== "1") {
+    botao.dataset.ok = "1";
+    botao.textContent = "Confirmar remoção";
+    return;
+  }
+
+  /*
+   * A área de gerenciamento adicional permanece oculta
+   * nesta versão local.
+   */
+  const referencia = db.doc(
+    "admins/" + botao.dataset.rmadm
+  );
+
+  if (typeof referencia.delete === "function") {
+    referencia.delete().catch(() => {});
+  }
+});
+
+/* =========================================================
+   PRÉ-CADASTRO PÚBLICO DOS ALUNOS
+   ========================================================= */
+
+function lerPrecadastros() {
+  const registros = JSON.parse(
+    localStorage.getItem(PRECADASTROS_KEY) || "[]"
+  );
+
+  if (!Array.isArray(registros)) {
+    throw new Error(
+      "Não foi possível ler os cadastros."
+    );
+  }
+
+  return registros;
+}
+
+function renderPendentes() {
+  $("student-pending").hidden = perfilCadastro;
+
+  if (perfilCadastro) return;
+
+  try {
+    const lista = lerPrecadastros();
+
+    $("student-pending-list").innerHTML = lista.length
+      ? lista.map(registro => `
+        <div class="row">
+          <div>
+            <div class="name">${esc(registro.nome)}</div>
+
+            <div class="meta">
+              CPF: ${esc(registro.cpf)} ·
+              Telefone: ${esc(registro.tel)}
+            </div>
+          </div>
+
+          <div class="actions">
+            <button
+              type="button"
+              data-pre-cadastro="${esc(registro.id)}"
+            >
+              Cadastrar aluno
+            </button>
+          </div>
+        </div>
+      `).join("")
+      : `
+        <p class="note">
+          Nenhum pré-cadastro enviado neste navegador.
+        </p>
+      `;
+  } catch (erro) {
+    $("student-pending-list").textContent = erro.message;
+  }
+}
+
+/* Preenche o formulário a partir de um pré-cadastro. */
+document.addEventListener("click", evento => {
+  const botao = evento.target.closest("[data-pre-cadastro]");
+
+  if (!botao || perfilCadastro) return;
+
+  try {
+    const registro = lerPrecadastros().find(
+      item => item.id === botao.dataset.preCadastro
+    );
+
+    if (!registro) return;
+
+    if (
+      alunos.some(aluno =>
+        aluno.id === "pre-" + registro.id
+      )
+    ) {
+      alert("Este pré-cadastro já foi convertido em aluno.");
+      return;
+    }
+
+    limparForm();
+
+    preCadastroId = registro.id;
+
+    $("a-nome").value = registro.nome;
+    $("a-cpf").value = registro.cpf;
+    $("a-tel").value = registro.tel;
+
+    $("a-save").textContent = "Concluir cadastro";
+    $("a-cancel").hidden = false;
+
+    $("fa").scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+    $("a-plano").focus({
+      preventScroll: true
+    });
+  } catch (erro) {
+    alert("Não foi possível abrir o pré-cadastro.");
+  }
+});
+
+/* =========================================================
+   ABAS CADASTRO E VALORES
+   ========================================================= */
+
+function abaAluno(destino) {
+  ["signup", "prices"].forEach(nome => {
+    const ativa = nome === destino;
+
+    $("student-panel-" + nome).hidden = !ativa;
+
+    const botao = $("student-tab-" + nome);
+
+    botao.setAttribute(
+      "aria-selected",
+      String(ativa)
+    );
+
+    botao.tabIndex = ativa ? 0 : -1;
+  });
+
+  if (destino === "prices") {
+    const tabela = [
+      {
+        n: "Plano mensal",
+        v: 95,
+        detalhe: "por mês"
+      },
+      {
+        n: "Plano casal",
+        v: 85,
+        detalhe: ""
+      },
+      {
+        n: "Plano três amigos",
+        v: 85,
+        detalhe: ""
+      },
+      {
+        n: "Plano semestral",
+        v: 480,
+        detalhe: "3x no cartão"
+      },
+      {
+        n: "Plano trimestral",
+        v: 255,
+        detalhe: "2x no cartão"
+      }
+    ];
+
+    $("student-prices-list").innerHTML = tabela
+      .map(plano => `
+        <div class="student-price">
+          <strong>${esc(plano.n)}</strong>
+
+          <div>
+            <span>${brl(plano.v)}</span>
+
+            ${
+              plano.detalhe
+                ? `<small>${esc(plano.detalhe)}</small>`
+                : ""
+            }
+          </div>
+        </div>
+      `)
+      .join("");
+  }
+}
+
+["signup", "prices"].forEach(nome => {
+  const botao = $("student-tab-" + nome);
+
+  botao.addEventListener("click", () => {
+    abaAluno(nome);
+  });
+
+  botao.addEventListener("keydown", evento => {
+    const teclas = [
+      "ArrowLeft",
+      "ArrowRight",
+      "Home",
+      "End"
+    ];
+
+    if (!teclas.includes(evento.key)) return;
+
+    evento.preventDefault();
+
+    let proxima;
+
+    if (evento.key === "Home") {
+      proxima = "signup";
+    } else if (evento.key === "End") {
+      proxima = "prices";
+    } else {
+      proxima = nome === "signup"
+        ? "prices"
+        : "signup";
+    }
+
+    abaAluno(proxima);
+    $("student-tab-" + proxima).focus();
+  });
+});
+
+$("student-cpf").addEventListener("input", evento => {
+  evento.target.value = formatarCpf(evento.target.value);
+});
+
+/* Salva apenas nome, CPF e telefone no pré-cadastro. */
+$("student-signup").addEventListener("submit", evento => {
+  evento.preventDefault();
+
+  const mensagem = $("student-feedback");
+
+  const nome = $("student-name").value.trim();
+
+  const cpf = $("student-cpf").value.replace(/\D/g, "");
+
+  const telefone = $("student-phone").value.replace(/\D/g, "");
+
+  if (nome.length < 2) {
+    mensagem.textContent = "Informe seu nome completo.";
+    return;
+  }
+
+  if (cpf.length !== 11) {
+    mensagem.textContent = "Informe o CPF com 11 dígitos.";
+    return;
+  }
+
+  if (![10, 11].includes(telefone.length)) {
+    mensagem.textContent =
+      "Informe o telefone com DDD (10 ou 11 dígitos).";
+    return;
+  }
+
+  try {
+    const lista = lerPrecadastros();
+
+    const repetido = lista.some(
+      registro =>
+        registro.cpf.replace(/\D/g, "") === cpf
+    );
+
+    if (repetido) {
+      mensagem.textContent =
+        "Já existe um cadastro com esse CPF neste navegador.";
+      return;
+    }
+
+    lista.push({
+      id: crypto.randomUUID(),
+      nome,
+      cpf: formatarCpf(cpf),
+      tel: telefone,
+      criadoEm: new Date().toISOString()
+    });
+
+    localStorage.setItem(
+      PRECADASTROS_KEY,
+      JSON.stringify(lista)
+    );
+
+    evento.target.reset();
+
+    mensagem.textContent =
+      "Cadastro enviado! A academia concluirá sua matrícula. " +
+      "Nesta versão, ele fica salvo apenas neste navegador.";
+  } catch (erro) {
+    mensagem.textContent =
+      "Não foi possível salvar. Tente novamente.";
+  }
+});
+
+/* =========================================================
+   SAÍDA E INICIALIZAÇÃO
+   ========================================================= */
+
+$("sair").addEventListener("click", () => {
+  try {
+    sessionStorage.removeItem("adm");
+  } catch (erro) {}
+
+  if (unsub) {
+    unsub();
+    unsub = null;
+  }
+
+  if (unsubAdm) {
+    unsubAdm();
+    unsubAdm = null;
+  }
+
+  alunos = [];
+  adminsList = [];
+
+  entrar();
+});
+
+$("retry").addEventListener("click", entrar);
+
+entrar();
 </script>
+
 </body>
 </html>
