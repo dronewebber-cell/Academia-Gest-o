@@ -614,8 +614,252 @@
         function carregarAlunosSalvos() {
             const salvos = localStorage.getItem('fitness_alunos');
             if (salvos) {
-                return JSON.parse(salvos);
+                try {
+                    return JSON.parse(salvos);
+                } catch (e) {
+                    console.error("Erro ao carregar dados", e);
+                }
             }
             return [
                 { nome: "Carlos Eduardo", cpf: "123.456.789-00", tel: "5511999998888", plano: "Completo", valor: 150.00, vencimento: "2026-11-10" },
-                { nome: "Mariana Souza", cpf: "987.654.321-11", tel: "5511988887777", plano: "Premium", valor: 200.00, vencimento:
+                { nome: "Mariana Souza", cpf: "987.654.321-11", tel: "5511988887777", plano: "Premium", valor: 200.00, vencimento: "2026-10-15" }
+            ];
+        }
+
+        function salvarNoLocalStorage() {
+            localStorage.setItem('fitness_alunos', JSON.stringify(alunos));
+        }
+
+        function verificarStatusAluno(dataVencimentoStr) {
+            if (!dataVencimentoStr) return 'Em dia';
+            const hoje = new Date();
+            hoje.setHours(0, 0, 0, 0);
+            const vencimento = new Date(dataVencimentoStr + 'T00:00:00');
+            return vencimento < hoje ? 'Atrasado' : 'Em dia';
+        }
+
+        function formatarDataBR(dataIso) {
+            if (!dataIso) return "";
+            const partes = dataIso.split("-");
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        }
+
+        // Login
+        function realizarLogin(event) {
+            event.preventDefault();
+            const inputUser = document.getElementById("username");
+            const errorMsg = document.getElementById("loginError");
+            
+            if (!inputUser) return;
+            const usuario = inputUser.value.trim().toUpperCase();
+
+            if (usuario === "ADM") {
+                document.getElementById("loginScreen").classList.add("hidden");
+                document.getElementById("appScreen").classList.remove("hidden");
+                mudarAba('dashboard');
+            } else {
+                errorMsg.textContent = "Digite exatamente: ADM";
+            }
+        }
+
+        function fazerLogout() {
+            document.getElementById("appScreen").classList.add("hidden");
+            document.getElementById("loginScreen").classList.remove("hidden");
+            document.getElementById("username").value = "";
+            document.getElementById("loginError").textContent = "";
+        }
+
+        // Navegação entre Abas
+        function mudarAba(abaId) {
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-section').forEach(section => section.classList.add('hidden'));
+
+            const tabEl = document.getElementById('tab-' + abaId);
+            const menuEl = document.getElementById('menu-' + abaId);
+
+            if (tabEl) tabEl.classList.remove('hidden');
+            if (menuEl) menuEl.classList.add('active');
+
+            if (abaId === 'dashboard') {
+                atualizarDashboard();
+                renderizarGraficos();
+            } else if (abaId === 'alunos') {
+                renderizarAlunos();
+            }
+        }
+
+        // Atualizar Métricas do Dashboard
+        function atualizarDashboard() {
+            let totalMov = 0;
+            let countEmDia = 0;
+            let countAtrasados = 0;
+
+            alunos.forEach(a => {
+                totalMov += Number(a.valor) || 0;
+                let status = verificarStatusAluno(a.vencimento);
+                if (status === 'Em dia') {
+                    countEmDia++;
+                } else {
+                    countAtrasados++;
+                }
+            });
+
+            document.getElementById("totalMovimento").textContent = `R$ ${totalMov.toFixed(2)}`;
+            document.getElementById("totalPago").textContent = countEmDia;
+            document.getElementById("totalDevendo").textContent = countAtrasados;
+        }
+
+        // Renderizar Gráficos com Chart.js
+        function renderizarGraficos() {
+            let totalMovimento = 0;
+            let countEmDia = 0;
+            let countAtrasados = 0;
+
+            alunos.forEach(a => {
+                totalMovimento += Number(a.valor) || 0;
+                let status = verificarStatusAluno(a.vencimento);
+                if (status === 'Em dia') {
+                    countEmDia++;
+                } else {
+                    countAtrasados++;
+                }
+            });
+
+            // Gráfico de Barras Financeiro
+            const canvasFinance = document.getElementById('financeChart');
+            if (canvasFinance) {
+                const ctxFinance = canvasFinance.getContext('2d');
+                if (financeChartInstance) financeChartInstance.destroy();
+                
+                financeChartInstance = new Chart(ctxFinance, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Movimento Total'],
+                        datasets: [{
+                            label: 'Valor (R$)',
+                            data: [totalMovimento],
+                            backgroundColor: ['#2563eb'],
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+
+            // Gráfico de Pizza de Alunos
+            const canvasStatus = document.getElementById('statusChart');
+            if (canvasStatus) {
+                const ctxStatus = canvasStatus.getContext('2d');
+                if (statusChartInstance) statusChartInstance.destroy();
+
+                statusChartInstance = new Chart(ctxStatus, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Em Dia', 'Atrasados'],
+                        datasets: [{
+                            data: [countEmDia, countAtrasados],
+                            backgroundColor: ['#16a34a', '#dc2626']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } }
+                    }
+                });
+            }
+        }
+
+        // Tabela de Alunos
+        function renderizarAlunos(lista = alunos) {
+            const tbody = document.getElementById("tabelaAlunosBody");
+            if (!tbody) return;
+            tbody.innerHTML = "";
+
+            if (lista.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #64748b;">Nenhum aluno encontrado.</td></tr>`;
+                return;
+            }
+
+            lista.forEach((aluno, index) => {
+                let status = verificarStatusAluno(aluno.vencimento);
+                let statusClass = status === 'Em dia' ? 'pago' : 'devedor';
+                
+                let tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td><strong>${aluno.nome}</strong></td>
+                    <td>${aluno.cpf}</td>
+                    <td>${aluno.tel}</td>
+                    <td>${aluno.plano}</td>
+                    <td>R$ ${(Number(aluno.valor) || 0).toFixed(2)}</td>
+                    <td>${formatarDataBR(aluno.vencimento)}</td>
+                    <td><span class="badge-status ${statusClass}">${status}</span></td>
+                    <td>
+                        <button class="btn-whatsapp" onclick="enviarWhatsApp('${aluno.nome}', '${aluno.tel}')">
+                            <i class="fa-brands fa-whatsapp"></i> Cobrar
+                        </button>
+                        <button class="btn-delete" onclick="excluirAluno(${index})" title="Excluir">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Cadastro de Alunos
+        function cadastrarAluno(event) {
+            event.preventDefault();
+
+            const nome = document.getElementById("nomeAluno").value;
+            const cpf = document.getElementById("cpfAluno").value;
+            const tel = document.getElementById("telAluno").value;
+            const plano = document.getElementById("planoAluno").value;
+            const valor = parseFloat(document.getElementById("valorAluno").value);
+            const vencimento = document.getElementById("vencimentoAluno").value;
+
+            alunos.push({ nome, cpf, tel, plano, valor, vencimento });
+            salvarNoLocalStorage();
+
+            alert("Aluno cadastrado com sucesso!");
+            document.getElementById("alunoForm").reset();
+            
+            mudarAba('alunos');
+        }
+
+        // Excluir Aluno
+        function excluirAluno(index) {
+            if (confirm("Deseja realmente excluir este aluno?")) {
+                alunos.splice(index, 1);
+                salvarNoLocalStorage();
+                renderizarAlunos();
+            }
+        }
+
+        // Filtro de Alunos
+        function filtrarAlunos() {
+            const inputSearch = document.getElementById("searchAluno");
+            if (!inputSearch) return;
+            const termo = inputSearch.value.toLowerCase();
+            const filtrados = alunos.filter(a => 
+                (a.nome && a.nome.toLowerCase().includes(termo)) || 
+                (a.cpf && a.cpf.toLowerCase().includes(termo))
+            );
+            renderizarAlunos(filtrados);
+        }
+
+        // Envio de WhatsApp
+        function enviarWhatsApp(nome, telefone) {
+            let numeroLimpo = telefone.replace(/\D/g, '');
+            let mensagem = encodeURIComponent(`Olá ${nome}, tudo bem? Passando para lembrar sobre a sua mensalidade na Fitness Culture. Poderia verificar, por favor?`);
+            
+            let url = `https://wa.me/${numeroLimpo}?text=${mensagem}`;
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
